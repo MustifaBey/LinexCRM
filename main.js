@@ -3,6 +3,7 @@ const { spawn } = require('child_process');
 const http = require('http');
 const path = require('path');
 const { autoUpdater } = require('electron-updater');
+const pkg = require('./package.json');
 
 // Auto-updater event listeners
 autoUpdater.on('update-available', () => {
@@ -87,7 +88,7 @@ async function createWindow() {
   }
 
   mainWindow = new BrowserWindow({
-    title: 'LinexCRM',
+    title: `LinexCRM — Agency Operating System v${pkg.version}`,
     width: 1280,
     height: 720,
     minWidth: 1280,
@@ -97,6 +98,11 @@ async function createWindow() {
       nodeIntegration: false,
       contextIsolation: true
     }
+  });
+
+  // Prevent Next.js from overwriting the custom window title
+  mainWindow.on('page-title-updated', (event) => {
+    event.preventDefault();
   });
 
   // Maximize the window immediately on launch to prevent squished layouts

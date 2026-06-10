@@ -169,8 +169,6 @@ export function Sidebar({
             )}
           </button>
         </div>
-
-        <div className="p-4 text-xs text-gray-500 font-mono text-center border-t border-gray-800">v1.0.0</div>
       </aside>
     </>
   );
