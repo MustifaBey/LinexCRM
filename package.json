@@ -1,6 +1,6 @@
 {
   "name": "linexcrm",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": true,
   "main": "main.js",
   "scripts": {
@@ -68,8 +68,8 @@
       "icon": "build/icon.ico"
     },
     "nsis": {
-      "oneClick": false,
-      "allowToChangeInstallationDirectory": true,
+      "oneClick": true,
+      "perMachine": false,
       "createDesktopShortcut": true
     },
     "files": [
@@ -78,6 +78,7 @@
       "public/**/*",
       "src/**/*",
       "main.js",
+      "preload.js",
       "package.json",
       ".env.local"
     ],

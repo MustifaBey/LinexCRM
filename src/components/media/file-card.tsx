@@ -22,11 +22,8 @@ import {
   Trash2,
   Loader2,
   Share2,
-  Link2,
-  Copy,
-  Check,
+  Download,
 } from "lucide-react";
-import { createShareLink } from "@/actions/shares";
 
 interface FileCardProps {
   file: MediaFile & { project?: { name: string }; uploader?: { full_name: string | null; email: string; avatar_url: string | null } };
@@ -53,11 +50,6 @@ export function getFileIcon(type: string) {
 export function FileCard({ file }: FileCardProps) {
   const router = useRouter();
   const [isDeleting, setIsDeleting] = useState(false);
-  const [shareOpen, setShareOpen] = useState(false);
-  const [expiresInHours, setExpiresInHours] = useState("24");
-  const [generatedLink, setGeneratedLink] = useState("");
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [copied, setCopied] = useState(false);
   
   const isImage = file.file_type.startsWith("image/");
   
@@ -108,8 +100,9 @@ export function FileCard({ file }: FileCardProps) {
         toast.success("Dosya başarıyla silindi.");
         router.refresh();
       }
-    } catch (err: any) {
-      toast.error("Dosya silinirken hata oluştu: " + err.message);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
+      toast.error("Dosya silinirken hata oluştu: " + message);
     } finally {
       setIsDeleting(false);
     }
@@ -118,37 +111,29 @@ export function FileCard({ file }: FileCardProps) {
   const handleShareClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    setShareOpen(true);
-    setGeneratedLink("");
+    navigator.clipboard.writeText(fileUrl);
+    toast.success("Dosya bağlantısı kopyalandı!");
   };
 
-  const handleGenerateLink = async (e: React.MouseEvent) => {
+  const handleDownload = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    setIsGenerating(true);
     try {
-      const res = await createShareLink(file.id, Number(expiresInHours));
-      if (res.error) {
-        toast.error("Paylaşım bağlantısı oluşturulamadı: " + res.error);
-      } else {
-        const link = `${window.location.origin}/api/share/${res.data.token}`;
-        setGeneratedLink(link);
-        toast.success("Paylaşım bağlantısı oluşturuldu.");
-      }
-    } catch (err: any) {
-      toast.error("Hata oluştu: " + err.message);
-    } finally {
-      setIsGenerating(false);
+      const response = await fetch(fileUrl);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", file.file_name);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+      toast.success("İndirme başlatıldı.");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
+      toast.error("Dosya indirilemedi: " + message);
     }
-  };
-
-  const handleCopyLink = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    navigator.clipboard.writeText(generatedLink);
-    setCopied(true);
-    toast.success("Bağlantı kopyalandı!");
-    setTimeout(() => setCopied(false), 2000);
   };
 
   return (
@@ -190,11 +175,19 @@ export function FileCard({ file }: FileCardProps) {
                   <Trash2 className="w-3.5 h-3.5" />
                 )}
               </button>
+
+              <button
+                onClick={handleDownload}
+                className="p-1.5 rounded-full bg-black/60 border border-white/10 text-zinc-300 hover:bg-zinc-800/80 hover:text-white transition-colors backdrop-blur-sm"
+                title="Dosyayı İndir"
+              >
+                <Download className="w-3.5 h-3.5" />
+              </button>
               
               <button
                 onClick={handleShareClick}
                 className="p-1.5 rounded-full bg-black/60 border border-white/10 text-zinc-300 hover:bg-zinc-800/80 hover:text-white transition-colors backdrop-blur-sm"
-                title="Dosyayı Paylaş"
+                title="Bağlantıyı Kopyala"
               >
                 <Share2 className="w-3.5 h-3.5" />
               </button>
@@ -253,119 +246,7 @@ export function FileCard({ file }: FileCardProps) {
         </div>
       </Link>
 
-      {/* Share Modal Dialog */}
-      {shareOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
-          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setShareOpen(false)} />
-
-          <div 
-            className="relative w-full max-w-md rounded-2xl bg-card border border-border shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Header */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-border">
-              <h2 className="text-lg font-semibold flex items-center gap-2">
-                <Link2 className="w-5 h-5 text-burgundy" />
-                <span>Güvenli Dosya Paylaşımı</span>
-              </h2>
-              <button
-                onClick={(e) => { e.preventDefault(); e.stopPropagation(); setShareOpen(false); }}
-                className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-              >
-                <XCircle className="w-4 h-4" />
-              </button>
-            </div>
-
-            {/* Body */}
-            <div className="px-6 py-5 space-y-4">
-              <p className="text-xs text-muted-foreground">
-                Bu dosya için dışarıdan erişilebilecek güvenli, süresi dolan bir indirme bağlantısı oluşturun.
-              </p>
-
-              {!generatedLink ? (
-                <div className="space-y-4">
-                  {/* Expiry select */}
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                      Geçerlilik Süresi
-                    </label>
-                    <select
-                      value={expiresInHours}
-                      onChange={(e) => setExpiresInHours(e.target.value)}
-                      className="w-full h-10 px-3 rounded-xl bg-input border border-border text-sm focus:outline-none focus:ring-2 focus:ring-ring transition-all"
-                    >
-                      <option value="1">1 Saat</option>
-                      <option value="24">24 Saat (1 Gün)</option>
-                      <option value="168">7 Gün (1 Hafta)</option>
-                      <option value="720">30 Gün (1 Ay)</option>
-                    </select>
-                  </div>
-
-                  <button
-                    onClick={handleGenerateLink}
-                    disabled={isGenerating}
-                    className="w-full h-10 px-4 rounded-xl gradient-burgundy text-white text-sm font-medium flex items-center justify-center gap-2 hover:opacity-90 disabled:opacity-50 transition-all shadow-md shadow-burgundy/15"
-                  >
-                    {isGenerating ? (
-                      <>
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                        <span>Bağlantı Oluşturuluyor...</span>
-                      </>
-                    ) : (
-                      <>
-                        <Link2 className="w-4 h-4" />
-                        <span>Bağlantı Oluştur</span>
-                      </>
-                    )}
-                  </button>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {/* Link Output */}
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                      Paylaşım Bağlantısı
-                    </label>
-                    <div className="flex gap-2">
-                      <input
-                        type="text"
-                        readOnly
-                        value={generatedLink}
-                        className="flex-1 h-10 px-3 rounded-xl bg-muted border border-border text-xs focus:outline-none select-all"
-                      />
-                      <button
-                        onClick={handleCopyLink}
-                        className="h-10 w-10 shrink-0 rounded-xl bg-input border border-border hover:bg-muted text-muted-foreground hover:text-foreground flex items-center justify-center transition-colors"
-                        title="Bağlantıyı Kopyala"
-                      >
-                        {copied ? (
-                          <Check className="w-4 h-4 text-emerald-500" />
-                        ) : (
-                          <Copy className="w-4 h-4" />
-                        )}
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="p-3 bg-emerald-950/20 border border-emerald-800/40 rounded-xl text-[11px] text-emerald-400">
-                    Bağlantı başarıyla oluşturuldu. Belirlediğiniz süre sonunda otomatik olarak geçersiz kılınacaktır.
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Footer */}
-            <div className="flex items-center justify-end px-6 py-4 border-t border-border bg-muted/20">
-              <button
-                onClick={(e) => { e.preventDefault(); e.stopPropagation(); setShareOpen(false); }}
-                className="h-10 px-4 rounded-xl text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-              >
-                Kapat
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Share Modal Dialog Removed */}
     </>
   );
 }

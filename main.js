@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const { spawn } = require('child_process');
 const http = require('http');
 const path = require('path');
@@ -6,11 +6,29 @@ const { autoUpdater } = require('electron-updater');
 const pkg = require('./package.json');
 
 // Auto-updater event listeners
-autoUpdater.on('update-available', () => {
+autoUpdater.on('update-available', (info) => {
   console.log('Yeni bir güncelleme bulundu, indiriliyor...');
+  if (mainWindow) {
+    mainWindow.webContents.send('update-available', info);
+  }
 });
-autoUpdater.on('update-downloaded', () => {
-  console.log('Güncelleme indirildi. Kuruluyor...');
+
+autoUpdater.on('download-progress', (progressObj) => {
+  console.log(`İndirme yüzdesi: ${progressObj.percent}%`);
+  if (mainWindow) {
+    mainWindow.webContents.send('download-progress', progressObj);
+  }
+});
+
+autoUpdater.on('update-downloaded', (info) => {
+  console.log('Güncelleme indirildi. Kurulum için hazır.');
+  if (mainWindow) {
+    mainWindow.webContents.send('update-downloaded', info);
+  }
+});
+
+// IPC handler to restart and install
+ipcMain.on('restart-to-update', () => {
   autoUpdater.quitAndInstall();
 });
 
@@ -96,7 +114,8 @@ async function createWindow() {
     autoHideMenuBar: true,
     webPreferences: {
       nodeIntegration: false,
-      contextIsolation: true
+      contextIsolation: true,
+      preload: path.join(__dirname, 'preload.js')
     }
   });
 

@@ -3,6 +3,7 @@ import { ThemeProvider } from "@/providers/theme-provider";
 import { QueryProvider } from "@/providers/query-provider";
 import { SupabaseProvider } from "@/providers/supabase-provider";
 import { Toaster } from "sonner";
+import { UpdateNotifier } from "@/components/layout/update-notifier";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -39,6 +40,7 @@ export default function RootLayout({
           <QueryProvider>
             <SupabaseProvider>
               {children}
+              <UpdateNotifier />
               <Toaster
                 theme="dark"
                 position="bottom-right"
