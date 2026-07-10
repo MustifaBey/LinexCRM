@@ -355,12 +355,6 @@ export function FileCard({ file, onDelete }: FileCardProps) {
           </div>
         </div>
       </Link>
-    </>    </div>
-        </div>
-      </Link>
-
-      {/* Share Modal Dialog Removed */}
     </>
   );
 }
-
