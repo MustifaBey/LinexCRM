@@ -302,71 +302,71 @@ export function FinanceDashboard({
       </div>
 
       {/* Metrics Row */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-5">
         {/* Net Profit Card */}
-        <div className="bg-card border border-border/80 p-5 rounded-2xl shadow-md relative overflow-hidden flex flex-col justify-between h-[110px]">
+        <div className="bg-card border border-border/80 p-3 md:p-5 rounded-xl md:rounded-2xl shadow-md relative overflow-hidden flex flex-col justify-between h-[90px] md:h-[110px]">
           <div>
-            <div className="flex justify-between items-center text-xs font-bold text-muted-foreground uppercase tracking-wider">
+            <div className="flex justify-between items-center text-[9px] md:text-xs font-bold text-muted-foreground uppercase tracking-wider">
               <span>Net Kâr</span>
-              <DollarSign className="w-4 h-4 text-burgundy" />
+              <DollarSign className="w-3.5 h-3.5 md:w-4 md:h-4 text-burgundy" />
             </div>
-            <div className="text-xl font-extrabold text-foreground mt-2 font-mono select-all">
+            <div className="text-base md:text-xl font-extrabold text-foreground mt-1 md:mt-2 font-mono select-all">
               {formatCurrency(metrics.netProfit)}
             </div>
           </div>
-          <div className="flex items-center gap-1 text-[11px] font-semibold text-muted-foreground mt-1">
+          <div className="flex items-center gap-1 text-[9px] md:text-[11px] font-semibold text-muted-foreground mt-0.5 md:mt-1">
             <span className={metrics.netProfit >= 0 ? "text-emerald-400" : "text-rose-400"}>
               {metrics.profitMargin}% marj
             </span>
-            <span>kümülatif kâr</span>
+            <span className="hidden sm:inline">kümülatif kâr</span>
           </div>
         </div>
 
         {/* MRR Card */}
-        <div className="bg-card border border-border/80 p-5 rounded-2xl shadow-md relative overflow-hidden flex flex-col justify-between h-[110px]">
+        <div className="bg-card border border-border/80 p-3 md:p-5 rounded-xl md:rounded-2xl shadow-md relative overflow-hidden flex flex-col justify-between h-[90px] md:h-[110px]">
           <div>
-            <div className="flex justify-between items-center text-xs font-bold text-muted-foreground uppercase tracking-wider">
+            <div className="flex justify-between items-center text-[9px] md:text-xs font-bold text-muted-foreground uppercase tracking-wider">
               <span>Aktif MRR</span>
-              <RefreshCw className="w-4 h-4 text-emerald-400" />
+              <RefreshCw className="w-3.5 h-3.5 md:w-4 md:h-4 text-emerald-400" />
             </div>
-            <div className="text-xl font-extrabold text-foreground mt-2 font-mono select-all">
+            <div className="text-base md:text-xl font-extrabold text-foreground mt-1 md:mt-2 font-mono select-all">
               {formatCurrency(metrics.mrr)}
             </div>
           </div>
-          <div className="text-[11px] font-semibold text-muted-foreground mt-1">
-            Normalleştirilmiş aylık gelir
+          <div className="text-[9px] md:text-[11px] font-semibold text-muted-foreground mt-0.5 md:mt-1 truncate">
+            Aylık tekrarlayan
           </div>
         </div>
 
         {/* Total Income Card */}
-        <div className="bg-card border border-border/80 p-5 rounded-2xl shadow-md relative overflow-hidden flex flex-col justify-between h-[110px]">
+        <div className="bg-card border border-border/80 p-3 md:p-5 rounded-xl md:rounded-2xl shadow-md relative overflow-hidden flex flex-col justify-between h-[90px] md:h-[110px]">
           <div>
-            <div className="flex justify-between items-center text-xs font-bold text-muted-foreground uppercase tracking-wider">
+            <div className="flex justify-between items-center text-[9px] md:text-xs font-bold text-muted-foreground uppercase tracking-wider">
               <span>Toplam Gelir</span>
-              <ArrowUpRight className="w-4 h-4 text-emerald-400" />
+              <ArrowUpRight className="w-3.5 h-3.5 md:w-4 md:h-4 text-emerald-400" />
             </div>
-            <div className="text-xl font-extrabold text-foreground mt-2 font-mono select-all">
+            <div className="text-base md:text-xl font-extrabold text-foreground mt-1 md:mt-2 font-mono select-all">
               {formatCurrency(metrics.totalIncome)}
             </div>
           </div>
-          <div className="text-[11px] font-semibold text-muted-foreground mt-1">
-            Toplam proje faturaları
+          <div className="text-[9px] md:text-[11px] font-semibold text-muted-foreground mt-0.5 md:mt-1 truncate">
+            Proje faturaları
           </div>
         </div>
 
         {/* Total Expenses Card */}
-        <div className="bg-card border border-border/80 p-5 rounded-2xl shadow-md relative overflow-hidden flex flex-col justify-between h-[110px]">
+        <div className="bg-card border border-border/80 p-3 md:p-5 rounded-xl md:rounded-2xl shadow-md relative overflow-hidden flex flex-col justify-between h-[90px] md:h-[110px]">
           <div>
-            <div className="flex justify-between items-center text-xs font-bold text-muted-foreground uppercase tracking-wider">
+            <div className="flex justify-between items-center text-[9px] md:text-xs font-bold text-muted-foreground uppercase tracking-wider">
               <span>Toplam Gider</span>
-              <ArrowDownRight className="w-4 h-4 text-rose-400" />
+              <ArrowDownRight className="w-3.5 h-3.5 md:w-4 md:h-4 text-rose-400" />
             </div>
-            <div className="text-xl font-extrabold text-foreground mt-2 font-mono select-all">
+            <div className="text-base md:text-xl font-extrabold text-foreground mt-1 md:mt-2 font-mono select-all">
               {formatCurrency(metrics.totalExpense)}
             </div>
           </div>
-          <div className="text-[11px] font-semibold text-muted-foreground mt-1">
-            Yazılım, hosting, maaş toplamı
+          <div className="text-[9px] md:text-[11px] font-semibold text-muted-foreground mt-0.5 md:mt-1 truncate">
+            Yazılım, hosting...
           </div>
         </div>
       </div>

@@ -34,6 +34,7 @@ export function DomainTable({ initialRecords, clients }: DomainTableProps) {
   const [search, setSearch] = useState("");
   const [selectedService, setSelectedService] = useState("all");
   const [selectedStatus, setSelectedStatus] = useState("all");
+  const [showFilters, setShowFilters] = useState(false);
   
   // Dialog Form States
   const [modalOpen, setModalOpen] = useState(false);
@@ -214,28 +215,52 @@ export function DomainTable({ initialRecords, clients }: DomainTableProps) {
   return (
     <div className="space-y-6">
       {/* Filters and Search Bar */}
-      <div className="flex flex-col lg:flex-row gap-4 items-center justify-between bg-card/40 border border-border/60 p-4 rounded-2xl backdrop-blur-md">
-        {/* Left Filters */}
-        <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto">
-          {/* Search bar */}
-          <div className="relative flex-1 sm:w-64 max-w-xs">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+      <div className="flex flex-col gap-3 bg-card/40 border border-border/60 p-3 md:p-4 rounded-xl md:rounded-2xl backdrop-blur-md">
+        {/* Top Row: Search, Toggle Filter, and Add Button */}
+        <div className="flex items-center gap-2.5 w-full">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <input
               type="text"
-              placeholder="Search services, provider, client..."
+              placeholder="Search services..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full h-10 pl-10 pr-4 rounded-xl bg-input/70 border border-border text-sm focus:outline-none focus:ring-2 focus:ring-ring transition-all"
+              className="w-full h-10 pl-9 pr-4 rounded-xl bg-input/70 border border-border text-sm focus:outline-none focus:ring-2 focus:ring-ring transition-all"
             />
           </div>
 
+          <button
+            onClick={() => setShowFilters(!showFilters)}
+            className={cn(
+              "h-10 w-10 rounded-xl border border-border/80 bg-card hover:bg-muted flex items-center justify-center shrink-0 transition-all cursor-pointer",
+              showFilters ? "border-burgundy/40 bg-burgundy/5 text-burgundy" : "text-muted-foreground"
+            )}
+            title="Filtreleri Göster"
+          >
+            <Filter className="w-4 h-4" />
+          </button>
+
+          <button
+            onClick={handleOpenCreate}
+            className="h-10 px-3.5 md:px-4 rounded-xl gradient-burgundy text-white text-xs md:text-sm font-semibold hover:opacity-90 transition-opacity flex items-center gap-1.5 shrink-0 shadow-lg shadow-burgundy/10"
+          >
+            <Plus className="w-4 h-4" />
+            <span className="hidden sm:inline">Add Record</span>
+          </button>
+        </div>
+
+        {/* Collapsible Filters Row */}
+        <div className={cn(
+          "flex-col md:flex-row gap-3 pt-2.5 border-t border-border/30 w-full animate-in fade-in duration-200",
+          showFilters ? "flex" : "hidden md:flex"
+        )}>
           {/* Service Type Tab Filters */}
-          <div className="flex bg-muted/40 p-1 rounded-xl border border-border/50">
+          <div className="flex bg-muted/40 p-1 rounded-xl border border-border/50 overflow-x-auto no-scrollbar shrink-0">
             {["all", "domain", "hosting", "ssl", "email"].map((type) => (
               <button
                 key={type}
                 onClick={() => setSelectedService(type)}
-                className={`h-8 px-3 rounded-lg text-xs font-semibold uppercase tracking-wider transition-all ${
+                className={`h-8 px-2.5 md:px-3 rounded-lg text-[10px] md:text-xs font-bold uppercase tracking-wider transition-all whitespace-nowrap ${
                   selectedService === type
                     ? "bg-card text-foreground shadow-sm border border-border/20"
                     : "text-muted-foreground hover:text-foreground"
@@ -247,7 +272,7 @@ export function DomainTable({ initialRecords, clients }: DomainTableProps) {
           </div>
 
           {/* Expiry Alarm Status Filters */}
-          <div className="flex bg-muted/40 p-1 rounded-xl border border-border/50">
+          <div className="flex bg-muted/40 p-1 rounded-xl border border-border/50 overflow-x-auto no-scrollbar shrink-0">
             {[
               { val: "all", label: "All Alarms" },
               { val: "safe", label: "Safe" },
@@ -257,7 +282,7 @@ export function DomainTable({ initialRecords, clients }: DomainTableProps) {
               <button
                 key={st.val}
                 onClick={() => setSelectedStatus(st.val)}
-                className={`h-8 px-3 rounded-lg text-xs font-semibold transition-all ${
+                className={`h-8 px-2.5 md:px-3 rounded-lg text-[10px] md:text-xs font-bold transition-all whitespace-nowrap ${
                   selectedStatus === st.val
                     ? "bg-card text-foreground shadow-sm border border-border/20"
                     : "text-muted-foreground hover:text-foreground"
@@ -268,15 +293,6 @@ export function DomainTable({ initialRecords, clients }: DomainTableProps) {
             ))}
           </div>
         </div>
-
-        {/* Right Actions */}
-        <button
-          onClick={handleOpenCreate}
-          className="h-10 px-4 rounded-xl gradient-burgundy text-white text-sm font-medium hover:opacity-90 transition-opacity flex items-center gap-2 shrink-0 shadow-lg shadow-burgundy/10 w-full lg:w-auto justify-center"
-        >
-          <Plus className="w-4 h-4" />
-          <span>Add Service Record</span>
-        </button>
       </div>
 
       {/* Ledger Table */}

@@ -240,7 +240,7 @@ export default async function TeamPage() {
           Ekip Kapasite Durumları
         </h2>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6">
           {teamWorkloads.map((workload) => {
             const { profile } = workload;
             const initials = getInitials(profile.full_name || profile.email);
@@ -248,13 +248,13 @@ export default async function TeamPage() {
             return (
               <div
                 key={profile.id}
-                className="bg-card border border-border/80 rounded-2xl p-6 shadow-xl flex flex-col justify-between hover:border-burgundy/30 hover:shadow-2xl transition-all duration-300 relative group"
+                className="bg-card border border-border/80 rounded-xl md:rounded-2xl p-4 md:p-6 shadow-xl flex flex-col justify-between hover:border-burgundy/30 hover:shadow-2xl transition-all duration-300 relative group"
               >
                 {/* Header profile row */}
                 <div>
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 rounded-xl border border-border/40 overflow-hidden shrink-0 bg-muted flex items-center justify-center relative">
+                  <div className="flex items-start justify-between gap-3 md:gap-4">
+                    <div className="flex items-center gap-2.5 md:gap-3">
+                      <div className="w-9 h-9 md:w-12 md:h-12 rounded-lg md:rounded-xl border border-border/40 overflow-hidden shrink-0 bg-muted flex items-center justify-center relative">
                         {profile.avatar_url ? (
                           // eslint-disable-next-line @next/next/no-img-element
                           <img
@@ -263,31 +263,31 @@ export default async function TeamPage() {
                             className="w-full h-full object-cover"
                           />
                         ) : (
-                          <span className="text-sm font-bold text-muted-foreground">{initials}</span>
+                          <span className="text-xs md:text-sm font-bold text-muted-foreground">{initials}</span>
                         )}
                       </div>
                       <div className="min-w-0">
-                        <h3 className="font-bold text-sm text-foreground truncate max-w-[150px]">
+                        <h3 className="font-bold text-xs md:text-sm text-foreground truncate max-w-[130px] md:max-w-[150px]">
                           {profile.full_name || "İsimsiz Personel"}
                         </h3>
-                        <p className="text-xs text-muted-foreground truncate max-w-[150px]">
+                        <p className="text-[10px] md:text-xs text-muted-foreground truncate max-w-[130px] md:max-w-[150px]">
                           {profile.email}
                         </p>
                       </div>
                     </div>
 
-                    <span className={cn("px-2.5 py-0.5 rounded-full border text-[10px] font-bold select-none uppercase tracking-wider", workload.capacityBadgeClass)}>
+                    <span className={cn("px-2 py-0.5 rounded-full border text-[9px] md:text-[10px] font-bold select-none uppercase tracking-wider", workload.capacityBadgeClass)}>
                       {workload.capacityStatus}
                     </span>
                   </div>
 
                   {/* Workload Capacity progress bar */}
-                  <div className="mt-6 space-y-1.5">
-                    <div className="flex items-center justify-between text-xs font-semibold">
+                  <div className="mt-4 md:mt-6 space-y-1">
+                    <div className="flex items-center justify-between text-[10px] md:text-xs font-semibold">
                       <span className="text-muted-foreground">İş Yükü Eforu</span>
                       <span className="text-foreground">{workload.activeCount} / 8 Aktif Görev</span>
                     </div>
-                    <div className="h-2 w-full bg-input rounded-full overflow-hidden">
+                    <div className="h-1.5 md:h-2 w-full bg-input rounded-full overflow-hidden">
                       <div
                         className={cn("h-full transition-all duration-300 rounded-full", workload.progressBarClass)}
                         style={{ width: `${workload.loadPercent}%` }}
@@ -296,20 +296,20 @@ export default async function TeamPage() {
                   </div>
 
                   {/* Priority and status counters summary */}
-                  <div className="mt-5 grid grid-cols-2 gap-2 text-xs border-t border-border/40 pt-4">
+                  <div className="mt-3.5 md:mt-5 grid grid-cols-2 gap-2 text-[10px] md:text-xs border-t border-border/40 pt-3 md:pt-4">
                     {/* Priority counters */}
-                    <div className="space-y-2 border-r border-border/40 pr-2">
-                      <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Kritiklik</p>
-                      <div className="flex flex-col gap-1.5">
+                    <div className="space-y-1.5 border-r border-border/40 pr-2">
+                      <p className="text-[9px] md:text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Kritiklik</p>
+                      <div className="flex flex-col gap-1">
                         <div className="flex items-center justify-between">
                           <span className="text-muted-foreground">Acil</span>
-                          <span className={cn("px-1.5 py-0.5 rounded font-mono font-bold text-[10px]", workload.priorityCounts.urgent > 0 ? "bg-rose-500/20 text-rose-400 border border-rose-500/30 animate-pulse" : "bg-muted/40 text-muted-foreground")}>
+                          <span className={cn("px-1.5 py-0.5 rounded font-mono font-bold text-[9px] md:text-[10px]", workload.priorityCounts.urgent > 0 ? "bg-rose-500/20 text-rose-400 border border-rose-500/30 animate-pulse" : "bg-muted/40 text-muted-foreground")}>
                             {workload.priorityCounts.urgent}
                           </span>
                         </div>
                         <div className="flex items-center justify-between">
                           <span className="text-muted-foreground">Yüksek</span>
-                          <span className={cn("px-1.5 py-0.5 rounded font-mono font-bold text-[10px]", workload.priorityCounts.high > 0 ? "bg-amber-500/20 text-amber-400 border border-amber-500/30" : "bg-muted/40 text-muted-foreground")}>
+                          <span className={cn("px-1.5 py-0.5 rounded font-mono font-bold text-[9px] md:text-[10px]", workload.priorityCounts.high > 0 ? "bg-amber-500/20 text-amber-400 border border-amber-500/30" : "bg-muted/40 text-muted-foreground")}>
                             {workload.priorityCounts.high}
                           </span>
                         </div>
@@ -317,9 +317,9 @@ export default async function TeamPage() {
                     </div>
 
                     {/* Status counters */}
-                    <div className="space-y-2 pl-2">
-                      <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Aşamalar</p>
-                      <div className="flex flex-col gap-1.5">
+                    <div className="space-y-1.5 pl-2">
+                      <p className="text-[9px] md:text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Aşamalar</p>
+                      <div className="flex flex-col gap-1">
                         <div className="flex items-center justify-between">
                           <span className="text-muted-foreground">Yapılacak</span>
                           <span className="font-semibold text-foreground/80 font-mono">{workload.statusCounts.todo}</span>
@@ -338,20 +338,20 @@ export default async function TeamPage() {
                 </div>
 
                 {/* Projects involved in */}
-                <div className="mt-6 pt-4 border-t border-border/40">
-                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-2">Dahil Olduğu Projeler</p>
+                <div className="mt-4 md:mt-6 pt-3 md:pt-4 border-t border-border/40">
+                  <p className="text-[9px] md:text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1.5">Dahil Olduğu Projeler</p>
                   {workload.involvedProjects.length === 0 ? (
-                    <p className="text-xs text-muted-foreground/60 italic">Aktif proje kaydı bulunmuyor.</p>
+                    <p className="text-[10px] md:text-xs text-muted-foreground/60 italic">Aktif proje kaydı bulunmuyor.</p>
                   ) : (
-                    <div className="flex flex-wrap gap-1.5">
+                    <div className="flex flex-wrap gap-1 md:gap-1.5">
                       {workload.involvedProjects.map((proj) => (
                         <Link
                           key={proj.id}
                           href={`/projects/${proj.id}`}
-                          className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-muted border border-border text-xs text-foreground/80 hover:text-burgundy hover:border-burgundy/30 transition-colors"
+                          className="inline-flex items-center gap-1 px-2 py-0.5 md:px-2.5 md:py-1 rounded-lg bg-muted border border-border text-[10px] md:text-xs text-foreground/80 hover:text-burgundy hover:border-burgundy/30 transition-colors"
                         >
-                          <Briefcase className="w-3 h-3 text-burgundy" />
-                          <span className="truncate max-w-[120px]">{proj.name}</span>
+                          <Briefcase className="w-2.5 h-2.5 md:w-3 md:h-3 text-burgundy" />
+                          <span className="truncate max-w-[100px] md:max-w-[120px]">{proj.name}</span>
                         </Link>
                       ))}
                     </div>
