@@ -48,8 +48,19 @@ export function FileGrid({ initialFiles, initialCount = 0, projects, clients = [
   const [totalCount, setTotalCount] = useState(initialCount || 0);
   const [isLoading, setIsLoading] = useState(false);
   const isInitialMount = useRef(true);
+  const [limit, setLimit] = useState(12);
 
-  const totalPages = Math.ceil(totalCount / 12) || 1;
+  // Client-side viewport detection for responsive pagination limit
+  useEffect(() => {
+    const updateLimit = () => {
+      setLimit(window.innerWidth < 768 ? 6 : 12);
+    };
+    updateLimit();
+    window.addEventListener("resize", updateLimit);
+    return () => window.removeEventListener("resize", updateLimit);
+  }, []);
+
+  const totalPages = Math.ceil(totalCount / limit) || 1;
 
   const handlePageChange = async (targetPage: number) => {
     if (targetPage < 1 || targetPage > totalPages || targetPage === page || isLoading) return;
@@ -57,7 +68,7 @@ export function FileGrid({ initialFiles, initialCount = 0, projects, clients = [
     setIsLoading(true);
     const res = await getMediaFiles({
       page: targetPage,
-      limit: 12,
+      limit: limit,
       projectId: selectedProject,
       clientId: selectedClient,
       status: selectedStatus,
@@ -94,7 +105,7 @@ export function FileGrid({ initialFiles, initialCount = 0, projects, clients = [
 
       const res = await getMediaFiles({
         page: 1,
-        limit: 12,
+        limit: limit,
         projectId: selectedProject,
         clientId: selectedClient,
         status: selectedStatus,
@@ -123,7 +134,7 @@ export function FileGrid({ initialFiles, initialCount = 0, projects, clients = [
       active = false;
       clearTimeout(delayDebounceFn);
     };
-  }, [selectedProject, selectedClient, selectedStatus, search, sortBy]);
+  }, [selectedProject, selectedClient, selectedStatus, search, sortBy, limit]);
 
   const handleUploadSuccess = (newFile: any) => {
     const newFileRecord = {

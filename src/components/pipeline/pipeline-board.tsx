@@ -130,9 +130,6 @@ export function PipelineBoard({ initialClients }: PipelineBoardProps) {
   );
 }
 
-// ────────────────────────────────────────────────────────────────────────
-// COLUMN COMPONENT
-// ────────────────────────────────────────────────────────────────────────
 interface ColumnProps {
   status: typeof PIPELINE_STATUSES[number];
   clients: Client[];
@@ -147,7 +144,7 @@ function PipelineColumn({ status, clients }: ColumnProps) {
     <div
       ref={setNodeRef}
       className={cn(
-        "rounded-2xl border flex flex-col h-full bg-card/15 backdrop-blur-md transition-colors duration-200 w-[280px] shrink-0 md:w-auto",
+        "rounded-2xl border flex flex-col h-full bg-card/15 backdrop-blur-md transition-colors duration-200 w-[310px] shrink-0 md:w-auto",
         isOver
           ? "border-burgundy/60 bg-burgundy/5"
           : "border-border/60"
@@ -186,6 +183,7 @@ function PipelineColumn({ status, clients }: ColumnProps) {
 // ────────────────────────────────────────────────────────────────────────
 // DRAGGABLE CARD WRAPPER
 // ────────────────────────────────────────────────────────────────────────
+// Added touchAction none to prevent default mobile scroll gestures on drag trigger
 function DraggableCard({ client }: { client: Client }) {
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
     id: client.id,
@@ -195,8 +193,11 @@ function DraggableCard({ client }: { client: Client }) {
   const style = transform
     ? {
         transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
+        touchAction: "none",
       }
-    : undefined;
+    : {
+        touchAction: "none",
+      };
 
   return (
     <div
@@ -215,8 +216,9 @@ function DraggableCard({ client }: { client: Client }) {
 function ClientCard({ client, dragProps, isOverlay }: { client: Client; dragProps?: any; isOverlay?: boolean }) {
   return (
     <div
+      {...dragProps}
       className={cn(
-        "rounded-xl bg-card border border-border p-3 space-y-2.5 shadow-sm group hover:border-burgundy/40 transition-colors relative",
+        "rounded-xl bg-card border border-border p-3 space-y-2.5 shadow-sm group hover:border-burgundy/40 transition-colors relative select-none touch-none",
         isOverlay ? "border-burgundy ring-2 ring-burgundy/20 shadow-md cursor-grabbing" : "cursor-grab"
       )}
     >
@@ -233,11 +235,8 @@ function ClientCard({ client, dragProps, isOverlay }: { client: Client; dragProp
           {client.name}
         </Link>
         
-        {/* Grip Handle */}
-        <div
-          {...dragProps}
-          className="p-1 text-muted-foreground/60 hover:text-foreground rounded transition-colors"
-        >
+        {/* Grip Handle Indicator */}
+        <div className="p-1 text-muted-foreground/60 group-hover:text-foreground rounded transition-colors">
           <GripVertical className="w-3.5 h-3.5" />
         </div>
       </div>

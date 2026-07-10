@@ -252,7 +252,7 @@ export function FileCard({ file, onDelete }: FileCardProps) {
             </div>
 
             {/* Status Badge - Floating */}
-            <div className="absolute top-1.5 right-1.5">
+            <div className="absolute top-1.5 right-1.5 hidden md:block">
               <div className={cn("flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-[9px] md:text-xs font-semibold border backdrop-blur-md", status.bg)}>
                 {status.icon}
                 <span>{status.label}</span>
@@ -305,18 +305,23 @@ export function FileCard({ file, onDelete }: FileCardProps) {
                   >
                     {file.file_name}
                   </h3>
-                  <button 
-                    onClick={(e) => { 
-                      e.preventDefault(); 
-                      e.stopPropagation(); 
-                      setNewName(file.file_name); 
-                      setIsRenaming(true); 
-                    }} 
-                    className="opacity-100 md:opacity-0 group-hover/title:opacity-100 transition-opacity text-muted-foreground hover:text-white cursor-pointer"
-                    title="Yeniden Adlandır"
-                  >
-                    <Edit2 className="w-3 h-3" />
-                  </button>
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    <div className={cn("inline-block md:hidden px-1.5 py-0.5 rounded text-[8px] font-bold border backdrop-blur-sm scale-90 origin-right shrink-0", status.bg)}>
+                      {status.label}
+                    </div>
+                    <button 
+                      onClick={(e) => { 
+                        e.preventDefault(); 
+                        e.stopPropagation(); 
+                        setNewName(file.file_name); 
+                        setIsRenaming(true); 
+                      }} 
+                      className="opacity-100 md:opacity-0 group-hover/title:opacity-100 transition-opacity text-muted-foreground hover:text-white cursor-pointer"
+                      title="Yeniden Adlandır"
+                    >
+                      <Edit2 className="w-3 h-3" />
+                    </button>
+                  </div>
                 </div>
               )}
               {!isRenaming && (

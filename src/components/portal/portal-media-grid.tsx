@@ -90,7 +90,7 @@ export function PortalMediaGrid({
         </div>
       ) : (
         <>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
             {files.map((file) => {
               const isApproved = file.status === "approved";
               const isRejected = file.status === "rejected";
@@ -105,34 +105,34 @@ export function PortalMediaGrid({
               return (
                 <div
                   key={file.id}
-                  className="bg-card border border-border/80 rounded-2xl p-4 shadow-lg flex flex-col justify-between min-h-[320px] hover:border-border transition-all"
+                  className="bg-card border border-border/80 rounded-2xl p-2.5 md:p-4 shadow-lg flex flex-col justify-between min-h-[220px] md:min-h-[320px] hover:border-border transition-all"
                 >
                   <Link
                     href={`/portal/media/${file.id}`}
-                    className="relative aspect-video rounded-xl bg-muted overflow-hidden flex items-center justify-center border border-border/40 select-none cursor-pointer hover:opacity-95 transition-opacity block w-full h-[150px]"
+                    className="relative aspect-video rounded-xl bg-muted overflow-hidden flex items-center justify-center border border-border/40 select-none cursor-pointer hover:opacity-95 transition-opacity block w-full"
                   >
                     {file.file_type.startsWith("image/") ? (
                       <Image
                         src={thumbUrl}
                         alt={file.file_name || "Tasarım Dosyası"}
                         fill
-                        sizes="(max-width: 768px) 100vw, 33vw"
+                        sizes="(max-width: 768px) 50vw, 33vw"
                         className="object-cover"
                         loading="lazy"
                       />
                     ) : (
-                      <div className="text-center p-4">
-                        <ImagePlus className="w-10 h-10 text-muted-foreground/80 mx-auto mb-2" />
-                        <span className="text-[10px] font-bold text-muted-foreground uppercase">
+                      <div className="text-center p-2 md:p-4">
+                        <ImagePlus className="w-6 h-6 md:w-10 md:h-10 text-muted-foreground/80 mx-auto mb-1 md:mb-2" />
+                        <span className="text-[8px] md:text-[10px] font-bold text-muted-foreground uppercase">
                           {file.file_type.split("/")[1] || "Dosya"}
                         </span>
                       </div>
                     )}
 
-                    <div className="absolute top-2.5 right-2.5 z-10">
+                    <div className="absolute top-1.5 right-1.5 md:top-2.5 md:right-2.5 z-10">
                       <span
                         className={cn(
-                          "px-2.5 py-1 rounded-full text-[10px] font-bold uppercase border backdrop-blur-md shadow-sm",
+                          "px-1.5 py-0.5 md:px-2.5 md:py-1 rounded-full text-[8px] md:text-[10px] font-bold uppercase border backdrop-blur-md shadow-sm scale-90 md:scale-100 origin-top-right",
                           isApproved && "bg-emerald-950/60 border-emerald-800/60 text-emerald-400",
                           isRejected && "bg-red-950/60 border-red-800/60 text-red-400",
                           isPendingReview && "bg-zinc-850/70 border-zinc-700/60 text-zinc-300"
@@ -145,38 +145,44 @@ export function PortalMediaGrid({
                     </div>
                   </Link>
 
-                  <div className="space-y-1 mt-4">
-                    <h3 className="font-bold text-sm text-foreground truncate" title={file.file_name}>
+                  <div className="space-y-0.5 md:space-y-1 mt-2.5 md:mt-4">
+                    <h3 className="font-bold text-xs md:text-sm text-foreground truncate" title={file.file_name}>
                       {file.file_name}
                     </h3>
-                    <p className="text-[10px] text-muted-foreground">Proje: {file.project?.name || "Genel"}</p>
+                    <p className="text-[9px] md:text-[10px] text-muted-foreground">Proje: {file.project?.name || "Genel"}</p>
                   </div>
 
-                  <div className="mt-4 pt-3 border-t border-border/40 flex gap-2 w-full select-none">
+                  <div className="mt-2.5 md:mt-4 pt-2 md:pt-3 border-t border-border/40 flex gap-1.5 md:gap-2 w-full select-none">
                     {isPendingReview ? (
                       <>
                         <button
                           onClick={() => handleMediaAction(file.id, "approved")}
                           disabled={isPending}
-                          className="flex-1 h-9 rounded-xl bg-emerald-950/30 hover:bg-emerald-900/40 border border-emerald-800/40 text-emerald-400 hover:text-emerald-300 text-xs font-semibold flex items-center justify-center gap-1 transition-all cursor-pointer disabled:opacity-50"
+                          className="flex-1 h-8 md:h-9 rounded-xl bg-emerald-950/30 hover:bg-emerald-900/40 border border-emerald-800/40 text-emerald-400 hover:text-emerald-300 text-[10px] md:text-xs font-semibold flex items-center justify-center gap-1 transition-all cursor-pointer disabled:opacity-50"
                         >
-                          <CheckCircle2 className="w-4 h-4" />
+                          <CheckCircle2 className="w-3.5 h-3.5 md:w-4 md:h-4" />
                           <span>Onayla</span>
                         </button>
 
                         <button
                           onClick={() => handleMediaAction(file.id, "rejected")}
                           disabled={isPending}
-                          className="flex-1 h-9 rounded-xl bg-red-950/30 hover:bg-red-900/40 border border-red-800/40 text-red-400 hover:text-red-300 text-xs font-semibold flex items-center justify-center gap-1 transition-all cursor-pointer disabled:opacity-50"
+                          className="flex-1 h-8 md:h-9 rounded-xl bg-red-950/30 hover:bg-red-900/40 border border-red-800/40 text-red-400 hover:text-red-300 text-[10px] md:text-xs font-semibold flex items-center justify-center gap-1 transition-all cursor-pointer disabled:opacity-50"
                         >
-                          <XCircle className="w-4 h-4" />
+                          <XCircle className="w-3.5 h-3.5 md:w-4 md:h-4" />
                           <span>Reddet</span>
                         </button>
                       </>
                     ) : (
-                      <div className="w-full text-center py-2 text-[11px] text-muted-foreground bg-muted/20 border border-border/30 rounded-xl">
-                        {isApproved && "Bu tasarım dosyası onaylanmıştır."}
-                        {isRejected && "Bu tasarım dosyası reddedilmiştir."}
+                      <div className="w-full text-center py-1.5 md:py-2 text-[9px] md:text-xs text-muted-foreground bg-muted/20 border border-border/30 rounded-xl font-medium">
+                        <span className="hidden md:inline">
+                          {isApproved && "Bu tasarım dosyası onaylanmıştır."}
+                          {isRejected && "Bu tasarım dosyası reddedilmiştir."}
+                        </span>
+                        <span className="inline md:hidden">
+                          {isApproved && "Tasarım onaylandı."}
+                          {isRejected && "Tasarım reddedildi."}
+                        </span>
                       </div>
                     )}
                   </div>
