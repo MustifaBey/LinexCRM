@@ -133,45 +133,45 @@ export default function DashboardPage() {
   }, [statsData]);
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-5 md:space-y-8">
       {/* Page Header */}
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-foreground">Kontrol Paneli</h1>
-        <p className="text-muted-foreground text-sm mt-1">
+        <h1 className="text-xl md:text-2xl font-bold tracking-tight text-foreground">Kontrol Paneli</h1>
+        <p className="text-muted-foreground text-xs md:text-sm mt-0.5 md:mt-1">
           Tekrar hoş geldiniz. İşte ajansınızın genel durumuna dair genel bakış.
         </p>
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
         {statsList.map((stat) => (
           <Link
             key={stat.title}
             href={stat.href}
-            className="group relative overflow-hidden rounded-2xl bg-card border border-border p-5 hover:border-primary/30 transition-all duration-300"
+            className="group relative overflow-hidden rounded-xl md:rounded-2xl bg-card border border-border p-3 md:p-5 hover:border-primary/30 transition-all duration-300"
           >
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">{stat.title}</p>
-                <p className="text-3xl font-bold mt-1 tracking-tight text-foreground">
+                <p className="text-[10px] md:text-xs font-semibold uppercase tracking-wider text-muted-foreground">{stat.title}</p>
+                <p className="text-xl md:text-3xl font-bold mt-0.5 md:mt-1 tracking-tight text-foreground">
                   {stat.value}
                 </p>
-                <p className="text-xs text-muted-foreground mt-1.5">
+                <p className="text-[9px] md:text-xs text-muted-foreground mt-0.5 md:mt-1.5">
                   {stat.change}
                 </p>
               </div>
               <div
                 className={cn(
-                  "w-10 h-10 rounded-xl flex items-center justify-center",
+                  "w-7 h-7 md:w-10 md:h-10 rounded-lg md:rounded-xl flex items-center justify-center shrink-0",
                   stat.bgColor
                 )}
               >
-                <stat.icon className={cn("w-5 h-5", stat.color)} />
+                <stat.icon className={cn("w-4 h-4 md:w-5 md:h-5", stat.color)} />
               </div>
             </div>
 
             {/* Hover arrow */}
-            <ArrowUpRight className="absolute top-4 right-4 w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+            <ArrowUpRight className="absolute top-3 right-3 w-3 h-3 md:w-4 md:h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
 
             {/* Bottom gradient accent */}
             <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -180,19 +180,19 @@ export default function DashboardPage() {
       </div>
 
       {/* Main content grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 md:gap-6">
         {/* Quick Actions */}
         <div className="lg:col-span-2">
-          <h2 className="text-lg font-semibold mb-4 flex items-center gap-2 text-foreground">
-            <Activity className="w-5 h-5 text-burgundy" />
+          <h2 className="text-base md:text-lg font-semibold mb-2.5 md:mb-4 flex items-center gap-2 text-foreground">
+            <Activity className="w-4 h-4 md:w-5 md:h-5 text-burgundy" />
             Hızlı İşlemler
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-3">
             {quickActions.map((action) => (
               <Link
                 key={action.title}
                 href={action.href}
-                className="group relative overflow-hidden rounded-xl bg-card border border-border p-4 hover:border-primary/30 transition-all duration-300"
+                className="group relative overflow-hidden rounded-lg md:rounded-xl bg-card border border-border p-3 md:p-4 hover:border-primary/30 transition-all duration-300"
               >
                 <div
                   className={cn(
@@ -201,9 +201,9 @@ export default function DashboardPage() {
                   )}
                 />
                 <div className="relative">
-                  <action.icon className="w-8 h-8 text-muted-foreground group-hover:text-primary transition-colors mb-3" />
-                  <h3 className="font-semibold text-sm text-foreground">{action.title}</h3>
-                  <p className="text-xs text-muted-foreground mt-0.5">
+                  <action.icon className="w-6 h-6 md:w-8 md:h-8 text-muted-foreground group-hover:text-primary transition-colors mb-1.5 md:mb-3" />
+                  <h3 className="font-semibold text-xs md:text-sm text-foreground">{action.title}</h3>
+                  <p className="text-[10px] md:text-xs text-muted-foreground mt-0.5">
                     {action.description}
                   </p>
                 </div>

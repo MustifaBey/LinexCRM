@@ -5,7 +5,7 @@ const config: CapacitorConfig = {
   appName: 'Linex CRM',
   webDir: 'out',
   server: {
-    url: 'http://10.0.2.2:3000',
+    url: 'https://linex-crm.vercel.app',
     cleartext: true
   }
 };

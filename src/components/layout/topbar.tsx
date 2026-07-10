@@ -266,7 +266,7 @@ export function Topbar({ onMenuClick, userProfile }: TopbarProps) {
   return (
     <>
       <header 
-        className="flex items-center h-16 pl-4 pr-[140px] lg:pl-6 lg:pr-[140px] border-b border-border bg-background/80 backdrop-blur-sm flex-shrink-0 gap-4 relative z-50 select-none"
+        className="flex items-center h-16 pl-4 pr-4 md:pr-[140px] lg:pl-6 lg:pr-[140px] border-b border-border bg-background/80 backdrop-blur-sm flex-shrink-0 gap-3 md:gap-4 relative z-50 select-none"
         style={{ WebkitAppRegion: "drag" } as React.CSSProperties}
       >
         {/* Mobile menu button */}
@@ -280,7 +280,7 @@ export function Topbar({ onMenuClick, userProfile }: TopbarProps) {
         </button>
 
         {/* Search bar trigger */}
-        <div className="flex-1 max-w-md" style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}>
+        <div className="flex-1 max-w-full md:max-w-md" style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}>
           <div
             onClick={() => setSearchOpen(true)}
             className="relative cursor-pointer group"
@@ -296,7 +296,7 @@ export function Topbar({ onMenuClick, userProfile }: TopbarProps) {
         </div>
 
         {/* Right side actions */}
-        <div className="flex items-center gap-2" style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}>
+        <div className="flex items-center gap-3 md:gap-4" style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}>
           {/* Notifications bell */}
           <div className="relative" ref={notifDropdownRef} style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}>
             <button
