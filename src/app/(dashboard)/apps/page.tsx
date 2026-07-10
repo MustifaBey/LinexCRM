@@ -248,7 +248,7 @@ export default function AppsPage() {
       ) : (
         /* Apps Directory Grid */
         <div className="space-y-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-5">
             {paginatedApps.map((app) => {
               // Extract clean domain for favicon API
               let domain = "google.com";
@@ -264,12 +264,12 @@ export default function AppsPage() {
                 <div
                   key={app.id}
                   onClick={() => handleOpenApp(app)}
-                  className="group relative flex flex-col justify-between p-5 rounded-2xl border border-border/80 bg-card/45 hover:bg-card/90 transition-all duration-300 hover:scale-[1.01] hover:shadow-xl cursor-pointer overflow-hidden min-h-[190px]"
+                  className="group relative flex flex-col justify-between p-3.5 rounded-xl md:rounded-2xl border border-border/80 bg-card/45 hover:bg-card/90 transition-all duration-300 hover:scale-[1.01] hover:shadow-xl cursor-pointer overflow-hidden min-h-[145px] md:min-h-[190px]"
                 >
-                  <div className="space-y-3.5 relative z-10">
+                  <div className="space-y-2 relative z-10">
                     <div className="flex items-start justify-between">
                       {/* Google Favicon API Image inside a rounded glass frame */}
-                      <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-muted/65 border border-border shadow-inner p-2 shrink-0 overflow-hidden backdrop-blur-md">
+                      <div className="flex items-center justify-center w-9 h-9 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-muted/65 border border-border shadow-inner p-1.5 md:p-2 shrink-0 overflow-hidden backdrop-blur-md relative">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img 
                           src={`https://www.google.com/s2/favicons?domain=${domain}&sz=128`}
@@ -279,34 +279,34 @@ export default function AppsPage() {
                             (e.target as HTMLElement).style.display = "none";
                           }}
                         />
-                        <Globe className="w-5 h-5 text-muted-foreground absolute" style={{ zIndex: -1 }} />
+                        <Globe className="w-4 h-4 md:w-5 md:h-5 text-muted-foreground absolute" style={{ zIndex: -1 }} />
                       </div>
 
                       {/* Delete button */}
                       <button
                         onClick={(e) => handleDeleteApp(app.id, e)}
-                        className="p-1.5 rounded-lg border border-border/50 bg-card/85 text-muted-foreground/60 hover:text-red-500 hover:bg-red-500/10 transition-all opacity-0 group-hover:opacity-100 cursor-pointer"
+                        className="p-1.5 rounded-lg border border-border/50 bg-card/85 text-muted-foreground/60 hover:text-red-500 hover:bg-red-500/10 transition-all opacity-100 md:opacity-0 md:group-hover:opacity-100 cursor-pointer"
                         title="Uygulamayı kaldır"
                       >
-                        <Trash2 className="w-3.5 h-3.5" />
+                        <Trash2 className="w-3 h-3 md:w-3.5 md:h-3.5" />
                       </button>
                     </div>
 
-                    <div className="space-y-1">
-                      <h3 className="font-bold text-foreground text-sm group-hover:text-primary transition-colors truncate">
+                    <div className="space-y-0.5">
+                      <h3 className="font-bold text-foreground text-xs md:text-sm group-hover:text-primary transition-colors truncate">
                         {app.name}
                       </h3>
-                      <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2">
+                      <p className="text-[10px] md:text-xs text-muted-foreground leading-snug line-clamp-2">
                         {app.description || `${domain} üzerinden entegre harici araç.`}
                       </p>
                     </div>
                   </div>
 
                   {/* Open Link Indicator */}
-                  <div className="flex justify-end pt-3.5 relative z-10">
-                    <span className="text-[10px] font-bold text-primary tracking-wider uppercase flex items-center gap-1 group-hover:underline">
-                      <span>Uygulamayı Aç</span>
-                      <ExternalLink className="w-3 h-3" />
+                  <div className="flex justify-end pt-2 md:pt-3.5 relative z-10">
+                    <span className="text-[9px] md:text-[10px] font-bold text-primary tracking-wider uppercase flex items-center gap-1 group-hover:underline">
+                      <span>Aç</span>
+                      <ExternalLink className="w-2.5 h-2.5 md:w-3 md:h-3" />
                     </span>
                   </div>
                 </div>

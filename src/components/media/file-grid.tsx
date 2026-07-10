@@ -41,6 +41,7 @@ export function FileGrid({ initialFiles, initialCount = 0, projects, clients = [
   const [selectedStatus, setSelectedStatus] = useState("all");
   const [sortBy, setSortBy] = useState("newest");
   const [uploadOpen, setUploadOpen] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
 
   // Pagination states
   const [page, setPage] = useState(1);
@@ -140,11 +141,11 @@ export function FileGrid({ initialFiles, initialCount = 0, projects, clients = [
   return (
     <div className="space-y-6">
       {/* Top Filter and Action Bar */}
-      <div className="flex flex-col md:flex-row gap-4 items-center justify-between bg-card/40 border border-border/60 p-4 rounded-2xl backdrop-blur-md">
-        {/* Left Search/Filters */}
-        <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
-          {/* Search */}
-          <div className="relative flex-1 md:w-64 max-w-xs">
+      <div className="flex flex-col gap-4 bg-card/40 border border-border/60 p-4 rounded-2xl backdrop-blur-md">
+        {/* Top Search bar, toggle filters button, and Upload button */}
+        <div className="flex items-center gap-2.5 w-full justify-between">
+          {/* Search container */}
+          <div className="relative flex-grow max-w-md">
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <input
               type="text"
@@ -155,13 +156,42 @@ export function FileGrid({ initialFiles, initialCount = 0, projects, clients = [
             />
           </div>
 
+          {/* Toggle filter button (mobile only) */}
+          <button
+            onClick={() => setShowFilters(!showFilters)}
+            className={cn(
+              "md:hidden flex items-center justify-center w-10 h-10 rounded-xl border transition-colors shrink-0",
+              showFilters
+                ? "bg-burgundy/10 border-burgundy/50 text-burgundy"
+                : "bg-input/70 border-border text-muted-foreground hover:text-foreground"
+            )}
+            title="Filtreleri Göster/Gizle"
+          >
+            <Filter className="w-4 h-4" />
+          </button>
+
+          {/* Upload Button */}
+          <button
+            onClick={() => setUploadOpen(true)}
+            className="h-10 px-4 rounded-xl gradient-burgundy text-white text-sm font-semibold hover:opacity-90 transition-opacity flex items-center gap-2 shrink-0 shadow-lg shadow-burgundy/10 cursor-pointer"
+          >
+            <UploadCloud className="w-4 h-4" />
+            <span className="hidden sm:inline">Dosya Yükle</span>
+          </button>
+        </div>
+
+        {/* Expandable filters dropdown block */}
+        <div className={cn(
+          "flex-wrap items-center gap-3 w-full border-t border-border/40 pt-4 md:pt-0 md:border-0",
+          showFilters ? "flex" : "hidden md:flex"
+        )}>
           {/* Project filter */}
-          <div className="flex items-center gap-2">
-            <Folder className="w-4 h-4 text-muted-foreground" />
+          <div className="flex items-center gap-2 flex-1 min-w-[140px] md:flex-initial">
+            <Folder className="w-4 h-4 text-muted-foreground shrink-0" />
             <select
               value={selectedProject}
               onChange={(e) => setSelectedProject(e.target.value)}
-              className="h-10 px-3 rounded-xl bg-input/70 border border-border text-sm focus:outline-none focus:ring-2 focus:ring-ring transition-all"
+              className="w-full h-10 px-3 rounded-xl bg-input/70 border border-border text-sm focus:outline-none focus:ring-2 focus:ring-ring transition-all"
             >
               <option value="all">Tüm Projeler</option>
               {projects.map((p) => (
@@ -173,12 +203,12 @@ export function FileGrid({ initialFiles, initialCount = 0, projects, clients = [
           </div>
 
           {/* Client filter */}
-          <div className="flex items-center gap-2">
-            <Users className="w-4 h-4 text-muted-foreground" />
+          <div className="flex items-center gap-2 flex-1 min-w-[140px] md:flex-initial">
+            <Users className="w-4 h-4 text-muted-foreground shrink-0" />
             <select
               value={selectedClient}
               onChange={(e) => setSelectedClient(e.target.value)}
-              className="h-10 px-3 rounded-xl bg-input/70 border border-border text-sm focus:outline-none focus:ring-2 focus:ring-ring transition-all"
+              className="w-full h-10 px-3 rounded-xl bg-input/70 border border-border text-sm focus:outline-none focus:ring-2 focus:ring-ring transition-all"
             >
               <option value="all">Tüm Müşteriler</option>
               {clients.map((c) => (
@@ -190,12 +220,12 @@ export function FileGrid({ initialFiles, initialCount = 0, projects, clients = [
           </div>
 
           {/* Status filter */}
-          <div className="flex items-center gap-2">
-            <Filter className="w-4 h-4 text-muted-foreground" />
+          <div className="flex items-center gap-2 flex-1 min-w-[140px] md:flex-initial">
+            <Filter className="w-4 h-4 text-muted-foreground shrink-0" />
             <select
               value={selectedStatus}
               onChange={(e) => setSelectedStatus(e.target.value)}
-              className="h-10 px-3 rounded-xl bg-input/70 border border-border text-sm focus:outline-none focus:ring-2 focus:ring-ring transition-all"
+              className="w-full h-10 px-3 rounded-xl bg-input/70 border border-border text-sm focus:outline-none focus:ring-2 focus:ring-ring transition-all"
             >
               <option value="all">Tüm Durumlar</option>
               <option value="uploaded">Yüklendi</option>
@@ -204,28 +234,20 @@ export function FileGrid({ initialFiles, initialCount = 0, projects, clients = [
               <option value="rejected">Reddedildi</option>
             </select>
           </div>
-        </div>
 
-        {/* Right Action / Sort */}
-        <div className="flex items-center gap-3 w-full md:w-auto justify-end">
-          <select
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value)}
-            className="h-10 px-3 rounded-xl bg-input/70 border border-border text-sm focus:outline-none focus:ring-2 focus:ring-ring transition-all"
-          >
-            <option value="newest">En Yeni</option>
-            <option value="oldest">En Eski</option>
-            <option value="largest">En Büyük Boyut</option>
-            <option value="smallest">En Küçük Boyut</option>
-          </select>
-
-          <button
-            onClick={() => setUploadOpen(true)}
-            className="h-10 px-4 rounded-xl gradient-burgundy text-white text-sm font-medium hover:opacity-90 transition-opacity flex items-center gap-2 shrink-0 shadow-lg shadow-burgundy/10 cursor-pointer"
-          >
-            <UploadCloud className="w-4 h-4" />
-            <span>Dosya Yükle</span>
-          </button>
+          {/* Sort Selection (now inside filter block) */}
+          <div className="flex items-center gap-2 flex-1 min-w-[140px] md:flex-initial md:ml-auto">
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              className="w-full h-10 px-3 rounded-xl bg-input/70 border border-border text-sm focus:outline-none focus:ring-2 focus:ring-ring transition-all"
+            >
+              <option value="newest">En Yeni</option>
+              <option value="oldest">En Eski</option>
+              <option value="largest">En Büyük Boyut</option>
+              <option value="smallest">En Küçük Boyut</option>
+            </select>
+          </div>
         </div>
       </div>
 

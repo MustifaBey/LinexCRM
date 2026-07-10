@@ -296,7 +296,7 @@ export function Topbar({ onMenuClick, userProfile }: TopbarProps) {
         </div>
 
         {/* Right side actions */}
-        <div className="flex items-center gap-3 md:gap-4" style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}>
+        <div className="flex items-center gap-3 md:gap-4 ml-auto" style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}>
           {/* Notifications bell */}
           <div className="relative" ref={notifDropdownRef} style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}>
             <button

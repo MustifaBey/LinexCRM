@@ -361,7 +361,7 @@ export function KanbanBoard({
   // ─────────────────────────────────────────
   if (!isMounted) {
     return (
-      <div className="flex gap-4 overflow-x-auto pb-4 min-h-[calc(100vh-220px)] [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+      <div className="flex gap-4 overflow-x-auto pb-4 min-h-[calc(100vh-220px)]">
         {columns.map((column) => (
           <div
             key={column.id}
@@ -381,7 +381,7 @@ export function KanbanBoard({
         onDragOver={handleDragOver}
         onDragEnd={handleDragEnd}
       >
-        <div className="flex gap-4 overflow-x-auto pb-4 min-h-[calc(100vh-220px)] [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+        <div className="flex gap-4 overflow-x-auto pb-4 min-h-[calc(100vh-220px)]">
           {columns.map((column) => (
             <KanbanColumn
               key={column.id}
