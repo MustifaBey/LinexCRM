@@ -317,7 +317,7 @@ export function Topbar({ onMenuClick, userProfile }: TopbarProps) {
             {/* Dropdown */}
             {notifDropdownOpen && (
               <div 
-                className="absolute right-0 top-full mt-2 w-80 rounded-xl bg-popover border border-border shadow-xl z-50 animate-in fade-in duration-100 flex flex-col overflow-hidden [style='-webkit-app-region:no-drag']"
+                className="fixed right-4 top-16 w-[calc(100vw-32px)] md:absolute md:right-0 md:top-full md:mt-2 md:w-80 rounded-xl bg-popover border border-border shadow-xl z-50 animate-in fade-in duration-100 flex flex-col overflow-hidden"
                 style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}
               >
                 {/* Header */}

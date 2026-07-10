@@ -191,9 +191,17 @@ export function CalendarView({
           {WEEKDAYS.map((day) => (
             <div
               key={day}
-              className="py-3 text-center text-xs font-semibold uppercase tracking-wider text-muted-foreground border-r border-border/40 last:border-r-0"
+              className="py-2.5 md:py-3 text-center text-[10px] md:text-xs font-semibold uppercase tracking-wider text-muted-foreground border-r border-border/40 last:border-r-0"
             >
-              {day}
+              <span className="hidden md:inline">{day}</span>
+              <span className="inline md:hidden">
+                {day === "Pazartesi" ? "Pzt" :
+                 day === "Salı" ? "Sal" :
+                 day === "Çarşamba" ? "Çar" :
+                 day === "Perşembe" ? "Per" :
+                 day === "Cuma" ? "Cum" :
+                 day === "Cumartesi" ? "Cmt" : "Paz"}
+              </span>
             </div>
           ))}
         </div>
@@ -220,7 +228,7 @@ export function CalendarView({
                 key={index}
                 onClick={() => cell.date && handleCellClick(cell.date)}
                 className={cn(
-                  "min-h-[120px] p-2 flex flex-col gap-1.5 transition-colors cursor-pointer hover:bg-muted/10 group relative select-none",
+                  "min-h-[75px] md:min-h-[120px] p-1.5 md:p-2 flex flex-col gap-1 md:gap-1.5 transition-colors cursor-pointer hover:bg-muted/10 group relative select-none",
                   cell.isCurrentMonth ? "bg-card/20" : "bg-muted/5 text-muted-foreground/50"
                 )}
               >
@@ -228,7 +236,7 @@ export function CalendarView({
                 <div className="flex items-center justify-between">
                   <span
                     className={cn(
-                      "w-6 h-6 flex items-center justify-center text-xs font-bold rounded-lg transition-colors",
+                      "w-5 h-5 md:w-6 md:h-6 flex items-center justify-center text-[10px] md:text-xs font-bold rounded-lg transition-colors",
                       isToday
                         ? "bg-burgundy text-white shadow-md shadow-burgundy/20"
                         : cell.isCurrentMonth
@@ -239,14 +247,14 @@ export function CalendarView({
                     {cell.dayNumber}
                   </span>
                   
-                  {/* Hover Cell Action icon */}
-                  <span className="opacity-0 group-hover:opacity-100 transition-opacity text-[10px] text-burgundy font-bold flex items-center gap-0.5">
+                  {/* Hover Cell Action icon (desktop only) */}
+                  <span className="hidden md:inline-flex opacity-0 group-hover:opacity-100 transition-opacity text-[10px] text-burgundy font-bold items-center gap-0.5">
                     <Plus className="w-3 h-3" /> Ekle
                   </span>
                 </div>
 
                 {/* Day Posts List */}
-                <div className="flex-1 overflow-y-auto space-y-1 pr-1.5 max-h-[85px] scrollbar-thin">
+                <div className="flex-1 overflow-y-auto space-y-1 pr-0.5 md:pr-1.5 max-h-[45px] md:max-h-[85px] scrollbar-thin">
                   {dayPosts.map((post) => {
                     const statusConfig = STATUS_MAP[post.status as keyof typeof STATUS_MAP] || STATUS_MAP.draft;
                     
@@ -255,23 +263,23 @@ export function CalendarView({
                         key={post.id}
                         onClick={(e) => handlePostClick(e, post)}
                         className={cn(
-                          "px-2 py-1 rounded-lg border text-[10px] font-medium transition-all hover:scale-[1.02] flex flex-col gap-0.5 shadow-sm truncate",
+                          "px-1.5 py-0.5 md:px-2 md:py-1 rounded-md md:rounded-lg border text-[9px] md:text-[10px] font-medium transition-all hover:scale-[1.02] flex flex-col gap-0.5 shadow-sm truncate",
                           statusConfig.bg
                         )}
                         title={post.content}
                       >
                         <div className="flex items-center justify-between gap-1">
-                          <span className="font-bold truncate text-foreground">
+                          <span className="font-bold truncate text-foreground text-[8px] md:text-[10px]">
                             {post.project?.name || "Genel"}
                           </span>
-                          <span className="text-[8px] opacity-75">
+                          <span className="hidden sm:inline text-[8px] opacity-75">
                             {new Date(post.publish_date).toLocaleTimeString("tr-TR", {
                               hour: "2-digit",
                               minute: "2-digit"
                             })}
                           </span>
                         </div>
-                        <p className="truncate opacity-90 leading-normal">{post.content}</p>
+                        <p className="truncate opacity-90 leading-normal text-[8px] md:text-[9px]">{post.content}</p>
                       </div>
                     );
                   })}

@@ -25,7 +25,8 @@ import {
   Plus,
   User,
   Vote,
-  Check
+  Check,
+  ChevronDown
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
@@ -532,12 +533,35 @@ export default function TeamChatPage() {
       <div className="flex-1 flex flex-col bg-background overflow-hidden relative">
         
         {/* Channel Header */}
-        <div className="p-4 border-b border-border bg-card/5 flex items-center justify-between shrink-0">
-          <div className="flex items-center gap-2">
-            <Hash className="w-5 h-5 text-muted-foreground" />
-            <h3 className="font-extrabold text-sm text-foreground">
+        <div className="p-3 md:p-4 border-b border-border bg-card/5 flex items-center justify-between shrink-0">
+          <div className="flex items-center gap-2.5">
+            <Hash className="w-4 h-4 md:w-5 md:h-5 text-muted-foreground shrink-0" />
+            {/* Mobile Channel Selector dropdown */}
+            <div className="block md:hidden relative">
+              <select
+                value={selectedChannel?.id || ""}
+                onChange={(e) => {
+                  const selected = channels.find((chan) => chan.id === e.target.value);
+                  if (selected) setSelectedChannel(selected);
+                }}
+                className="bg-card text-foreground text-xs font-bold border border-border/80 rounded-xl pl-2.5 pr-8 py-1.5 focus:outline-none focus:ring-1 focus:ring-burgundy appearance-none cursor-pointer"
+              >
+                {channels.map((chan) => (
+                  <option key={chan.id} value={chan.id}>
+                    #{chan.name}
+                  </option>
+                ))}
+              </select>
+              <div className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground">
+                <ChevronDown className="w-3.5 h-3.5" />
+              </div>
+            </div>
+
+            {/* Desktop Channel Title */}
+            <h3 className="hidden md:block font-extrabold text-sm text-foreground">
               {selectedChannel ? selectedChannel.name : "Kanal Seçilmedi"}
             </h3>
+
             {selectedChannel && (
               <>
                 <span className="hidden sm:inline text-muted-foreground text-xs font-medium">|</span>
@@ -704,10 +728,10 @@ export default function TeamChatPage() {
                             setSelectedMessageId(m.id);
                             setShowDeleteModal(true);
                           }}
-                          className="absolute right-4 top-4 opacity-0 group-hover:opacity-100 p-2 text-red-500 hover:text-red-400 hover:bg-red-500/10 rounded-md transition-all cursor-pointer"
+                          className="absolute right-2 top-2 md:right-4 md:top-4 opacity-100 md:opacity-0 md:group-hover:opacity-100 p-1.5 md:p-2 text-red-500 hover:text-red-400 hover:bg-red-500/10 rounded-md transition-all cursor-pointer z-10"
                           title="Mesajı Sil"
                         >
-                          <Trash2 className="w-4 h-4" />
+                          <Trash2 className="w-3.5 h-3.5 md:w-4 md:h-4" />
                         </button>
                       </div>
                     );

@@ -1,7 +1,17 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { DndContext, useDraggable, useDroppable, type DragEndEvent, DragOverlay } from "@dnd-kit/core";
+import { 
+  DndContext, 
+  useDraggable, 
+  useDroppable, 
+  type DragEndEvent, 
+  DragOverlay,
+  useSensor,
+  useSensors,
+  PointerSensor,
+  TouchSensor
+} from "@dnd-kit/core";
 import { PIPELINE_STATUSES } from "@/lib/constants";
 import { updateClientPipelineStatus } from "@/actions/pipeline";
 import type { Client } from "@/types/database";
@@ -19,6 +29,22 @@ export function PipelineBoard({ initialClients }: PipelineBoardProps) {
   const [isMounted, setIsMounted] = useState(false);
   const [activeClient, setActiveClient] = useState<Client | null>(null);
 
+  // Configure Sensors for responsive touch interactions
+  const pointerSensor = useSensor(PointerSensor, {
+    activationConstraint: {
+      distance: 8,
+    },
+  });
+
+  const touchSensor = useSensor(TouchSensor, {
+    activationConstraint: {
+      delay: 250,
+      tolerance: 5,
+    },
+  });
+
+  const sensors = useSensors(pointerSensor, touchSensor);
+
   useEffect(() => {
     setIsMounted(true);
   }, []);
@@ -29,9 +55,9 @@ export function PipelineBoard({ initialClients }: PipelineBoardProps) {
 
   if (!isMounted) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-4 h-[600px] animate-pulse">
+      <div className="flex md:grid md:grid-cols-5 gap-4 overflow-x-auto pb-4 h-[600px] animate-pulse no-scrollbar">
         {PIPELINE_STATUSES.map((status) => (
-          <div key={status.value} className="bg-card/20 border border-border/40 rounded-2xl p-4 space-y-4">
+          <div key={status.value} className="bg-card/20 border border-border/40 rounded-2xl p-4 space-y-4 w-[280px] shrink-0 md:w-auto">
             <div className="h-6 bg-muted rounded w-1/2" />
             <div className="h-32 bg-muted/40 rounded-xl" />
             <div className="h-32 bg-muted/40 rounded-xl" />
@@ -81,8 +107,8 @@ export function PipelineBoard({ initialClients }: PipelineBoardProps) {
   };
 
   return (
-    <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-4 h-full min-h-[600px]">
+    <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+      <div className="flex md:grid md:grid-cols-5 gap-4 overflow-x-auto pb-4 md:pb-0 h-full min-h-[600px] no-scrollbar">
         {PIPELINE_STATUSES.map((status) => {
           const stageClients = clients.filter((c) => c.pipeline_status === status.value);
 
@@ -121,7 +147,7 @@ function PipelineColumn({ status, clients }: ColumnProps) {
     <div
       ref={setNodeRef}
       className={cn(
-        "rounded-2xl border flex flex-col h-full bg-card/15 backdrop-blur-md transition-colors duration-200",
+        "rounded-2xl border flex flex-col h-full bg-card/15 backdrop-blur-md transition-colors duration-200 w-[280px] shrink-0 md:w-auto",
         isOver
           ? "border-burgundy/60 bg-burgundy/5"
           : "border-border/60"

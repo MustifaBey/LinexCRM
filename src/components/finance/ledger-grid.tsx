@@ -623,7 +623,7 @@ export function LedgerGrid({
 
                       {/* Action buttons */}
                       <td className="px-5 py-4 text-right">
-                        <div className="flex items-center justify-end gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div className="flex items-center justify-end gap-1.5 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
                           {tx.receipt_url && (
                             <a
                               href={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/receipts/${tx.receipt_url}`}
