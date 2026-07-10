@@ -4,7 +4,7 @@ import { useState, useMemo } from "react";
 import { createDomainRecord, updateDomainRecord, deleteDomainRecord } from "@/actions/domains";
 import type { DomainRecord, Client } from "@/types/database";
 import { StatusBadge } from "./status-badge";
-import { daysUntil, formatCurrency, formatDate } from "@/lib/utils";
+import { cn, daysUntil, formatCurrency, formatDate } from "@/lib/utils";
 import {
   Search,
   Filter,
