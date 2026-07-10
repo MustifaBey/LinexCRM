@@ -56,7 +56,7 @@ function TabsList({ className, children }: TabsListProps) {
   return (
     <div className={cn("flex border-b border-border/80 pb-px", className)}>
       <div 
-        className="flex gap-1.5 bg-card/30 border border-border/60 p-1.5 rounded-2xl w-full md:w-auto mb-[15px]"
+        className="flex gap-1.5 overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] bg-card/30 border border-border/60 p-1.5 rounded-2xl w-full md:w-auto mb-[15px]"
         style={{ marginBottom: '15px' }}
       >
         {children}
@@ -245,13 +245,13 @@ export function ProjectDetailTabs({
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               className={cn(
-                "flex-1 md:flex-initial flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 select-none",
+                "flex-1 md:flex-initial flex items-center justify-center gap-1.5 md:gap-2 px-3 py-2 md:px-5 md:py-2.5 rounded-xl text-xs md:text-sm font-semibold shrink-0 transition-all duration-200 select-none",
                 isActive
                   ? "bg-muted text-foreground border border-border/85 shadow-lg"
                   : "text-muted-foreground hover:text-foreground hover:bg-muted/40"
               )}
             >
-              <Icon className={cn("w-4 h-4", isActive ? "text-burgundy" : "text-muted-foreground")} />
+              <Icon className={cn("w-3.5 h-3.5 md:w-4 md:h-4", isActive ? "text-burgundy" : "text-muted-foreground")} />
               <span>{tab.label}</span>
             </button>
           );

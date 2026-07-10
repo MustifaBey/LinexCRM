@@ -176,42 +176,42 @@ export function ClientsTable({ initialClients }: ClientsTableProps) {
   return (
     <div className="space-y-6">
       {/* Top Filter and Add Bar */}
-      <div className="flex flex-col md:flex-row gap-4 items-center justify-between bg-card/40 border border-border/60 p-4 rounded-2xl backdrop-blur-md">
-        {/* Left Side: Search & Radar */}
-        <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto items-center">
-          <div className="relative w-full sm:w-80">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <input
-              type="text"
-              placeholder="Müşteri adı, firma veya e-posta ara..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full h-10 pl-10 pr-4 rounded-xl bg-input/70 border border-border text-sm focus:outline-none focus:ring-2 focus:ring-ring transition-all"
-            />
-          </div>
+      <div className="flex flex-col md:flex-row gap-3 md:gap-4 items-center justify-between bg-card/40 border border-border/60 p-3 md:p-4 rounded-xl md:rounded-2xl backdrop-blur-md">
+        {/* Left Side: Search */}
+        <div className="relative w-full md:w-85">
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <input
+            type="text"
+            placeholder="Müşteri adı, firma veya e-posta ara..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full h-10 pl-10 pr-4 rounded-xl bg-input/70 border border-border text-sm focus:outline-none focus:ring-2 focus:ring-ring transition-all"
+          />
+        </div>
 
+        {/* Right Side Actions: Radar & Add buttons side-by-side on mobile */}
+        <div className="grid grid-cols-2 md:flex items-center gap-2.5 w-full md:w-auto">
           <a
             href="https://linexmapradarv2.vercel.app/"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium transition-all duration-300 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 border border-input bg-transparent hover:border-burgundy hover:text-burgundy hover:bg-burgundy/5 h-9 px-4 py-2 gap-2 w-full sm:w-auto cursor-pointer"
+            className="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-xs md:text-sm font-semibold border border-input bg-transparent hover:border-burgundy hover:text-burgundy hover:bg-burgundy/5 h-10 px-4 gap-2 cursor-pointer w-full text-center"
           >
-            <Radar className="w-4 h-4 text-burgundy" />
-            Müşteri Radarı
+            <Radar className="w-4 h-4 text-burgundy shrink-0" />
+            <span>Müşteri Radarı</span>
           </a>
-        </div>
 
-        {/* Add Client Button */}
-        <button
-          onClick={() => {
-            setEditingClient(null);
-            setDialogOpen(true);
-          }}
-          className="h-10 px-5 rounded-xl gradient-burgundy text-white text-sm font-medium hover:opacity-90 transition-opacity flex items-center gap-2 shrink-0 shadow-lg shadow-burgundy/10 w-full md:w-auto justify-center"
-        >
-          <Plus className="w-4 h-4" />
-          <span>Yeni Müşteri Ekle</span>
-        </button>
+          <button
+            onClick={() => {
+              setEditingClient(null);
+              setDialogOpen(true);
+            }}
+            className="h-10 px-4 rounded-xl gradient-burgundy text-white text-xs md:text-sm font-semibold hover:opacity-90 transition-opacity flex items-center gap-2 shrink-0 shadow-lg shadow-burgundy/10 justify-center w-full"
+          >
+            <Plus className="w-4 h-4 shrink-0" />
+            <span className="truncate">Yeni Müşteri</span>
+          </button>
+        </div>
       </div>
 
       {/* Table grid */}
@@ -240,20 +240,20 @@ export function ClientsTable({ initialClients }: ClientsTableProps) {
           }
         />
       ) : (
-        <div className="bg-card border border-border/80 rounded-2xl overflow-hidden shadow-xl">
+        <div className="bg-card border border-border/80 rounded-xl md:rounded-2xl overflow-hidden shadow-xl">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b border-border/60 bg-muted/20 text-xs font-semibold text-muted-foreground uppercase tracking-wider select-none">
-                  <th className="px-6 py-4">Müşteri Adı</th>
-                  <th className="px-6 py-4">Firma</th>
-                  <th className="px-6 py-4">İletişim Bilgileri</th>
-                  <th className="px-6 py-4">Aktif Projeler</th>
-                  <th className="px-6 py-4">Durum</th>
-                  <th className="px-6 py-4 text-right">İşlemler</th>
+                <tr className="border-b border-border/60 bg-muted/20 text-[10px] md:text-xs font-semibold text-muted-foreground uppercase tracking-wider select-none">
+                  <th className="px-3 py-2.5 md:px-6 md:py-4">Müşteri Adı</th>
+                  <th className="px-3 py-2.5 md:px-6 md:py-4">Firma</th>
+                  <th className="px-3 py-2.5 md:px-6 md:py-4">İletişim Bilgileri</th>
+                  <th className="px-3 py-2.5 md:px-6 md:py-4">Aktif Projeler</th>
+                  <th className="px-3 py-2.5 md:px-6 md:py-4">Durum</th>
+                  <th className="px-3 py-2.5 md:px-6 md:py-4 text-right">İşlemler</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-border/40 text-sm">
+              <tbody className="divide-y divide-border/40 text-xs md:text-sm">
                 {filteredClients.map((client) => {
                   const projectList = client.projects || [];
                   const activeProjects = projectList.filter(
@@ -280,82 +280,82 @@ export function ClientsTable({ initialClients }: ClientsTableProps) {
                       className="hover:bg-muted/15 transition-colors group"
                     >
                       {/* Name */}
-                      <td className="px-6 py-4.5">
+                      <td className="px-3 py-2.5 md:px-6 md:py-4.5">
                         <Link
                           href={`/clients/${client.id}`}
-                          className="flex items-center gap-3 hover:text-burgundy transition-colors group/link"
+                          className="flex items-center gap-2 hover:text-burgundy transition-colors group/link"
                         >
-                          <div className="w-9 h-9 rounded-xl bg-burgundy/10 text-burgundy flex items-center justify-center font-bold text-sm shrink-0 border border-burgundy/20 group-hover/link:border-burgundy/40 transition-all">
+                          <div className="w-7 h-7 md:w-9 md:h-9 rounded-lg md:rounded-xl bg-burgundy/10 text-burgundy flex items-center justify-center font-bold text-xs md:text-sm shrink-0 border border-burgundy/20 group-hover/link:border-burgundy/40 transition-all">
                             {client.logo_url ? (
                               // eslint-disable-next-line @next/next/no-img-element
                               <img
                                 src={client.logo_url}
                                 alt={client.name}
-                                className="w-full h-full object-cover rounded-xl"
+                                className="w-full h-full object-cover rounded-lg md:rounded-xl"
                               />
                             ) : (
                               client.name.charAt(0).toUpperCase()
                             )}
                           </div>
-                          <div className="font-semibold text-foreground group-hover/link:text-burgundy transition-colors truncate max-w-[200px]">
+                          <div className="font-semibold text-foreground group-hover/link:text-burgundy transition-colors truncate max-w-[120px] md:max-w-[200px]">
                             {client.name}
                           </div>
                         </Link>
                       </td>
 
                       {/* Company */}
-                      <td className="px-6 py-4.5">
-                        <div className="flex items-center gap-2 font-medium text-foreground/80">
-                          <Building className="w-4 h-4 text-muted-foreground shrink-0" />
-                          <span className="truncate max-w-[150px]">
+                      <td className="px-3 py-2.5 md:px-6 md:py-4.5">
+                        <div className="flex items-center gap-1.5 font-medium text-foreground/80 text-xs md:text-sm">
+                          <Building className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
+                          <span className="truncate max-w-[100px] md:max-w-[150px]">
                             {client.company || "—"}
                           </span>
                         </div>
                       </td>
 
                       {/* Contact Info */}
-                      <td className="px-6 py-4.5 space-y-1">
+                      <td className="px-3 py-2.5 md:px-6 md:py-4.5 space-y-0.5">
                         {client.contact_email && (
-                          <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                            <Mail className="w-3.5 h-3.5 text-muted-foreground/85 shrink-0" />
-                            <span className="select-all">{client.contact_email}</span>
+                          <div className="flex items-center gap-1.5 text-[10px] md:text-xs text-muted-foreground">
+                            <Mail className="w-3 h-3 text-muted-foreground/85 shrink-0" />
+                            <span className="select-all truncate max-w-[120px] md:max-w-none">{client.contact_email}</span>
                           </div>
                         )}
                         {client.contact_phone && (
-                          <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                            <Phone className="w-3.5 h-3.5 text-muted-foreground/85 shrink-0" />
+                          <div className="flex items-center gap-1.5 text-[10px] md:text-xs text-muted-foreground">
+                            <Phone className="w-3 h-3 text-muted-foreground/85 shrink-0" />
                             <span className="select-all">{client.contact_phone}</span>
                           </div>
                         )}
                         {!client.contact_email && !client.contact_phone && (
-                          <span className="text-muted-foreground text-xs">—</span>
+                          <span className="text-muted-foreground text-[10px] md:text-xs">—</span>
                         )}
                       </td>
 
                       {/* Active Projects Count */}
-                      <td className="px-6 py-4.5">
-                        <div className="flex items-center gap-2">
-                          <Briefcase className="w-4 h-4 text-muted-foreground/80 shrink-0" />
+                      <td className="px-3 py-2.5 md:px-6 md:py-4.5">
+                        <div className="flex items-center gap-1.5 text-xs md:text-sm">
+                          <Briefcase className="w-3.5 h-3.5 text-muted-foreground/80 shrink-0" />
                           <span className="font-semibold text-foreground/90 font-mono">
                             {activeCount}
                           </span>
                           {totalCount > activeCount && (
-                            <span className="text-xs text-muted-foreground font-mono">
-                              / {totalCount} toplam
+                            <span className="text-[10px] md:text-xs text-muted-foreground font-mono">
+                              / {totalCount}
                             </span>
                           )}
                         </div>
                       </td>
 
                       {/* Status */}
-                      <td className="px-6 py-4.5">
-                        <span className={cn("px-2.5 py-1 rounded-full border text-xs font-semibold select-none", statusBadgeClass)}>
+                      <td className="px-3 py-2.5 md:px-6 md:py-4.5">
+                        <span className={cn("px-1.5 py-0.5 md:px-2.5 md:py-1 rounded-full border text-[10px] md:text-xs font-semibold select-none", statusBadgeClass)}>
                           {statusText}
                         </span>
                       </td>
 
                       {/* Actions Dropdown */}
-                      <td className="px-6 py-4.5 text-right relative">
+                      <td className="px-3 py-2.5 md:px-6 md:py-4.5 text-right relative">
                         <ClientActions
                           client={client}
                           onEdit={(c) => {

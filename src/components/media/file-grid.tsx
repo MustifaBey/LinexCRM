@@ -273,7 +273,7 @@ export function FileGrid({ initialFiles, initialCount = 0, projects, clients = [
         />
       ) : (
         <div className="space-y-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-5">
             {files.map((file, index) => (
               <FileCard
                 key={file.id || index}

@@ -191,44 +191,44 @@ export default async function TeamPage() {
       </div>
 
       {/* Stats Widgets */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-card border border-border/60 rounded-2xl p-5 shadow-xl flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-burgundy/10 text-burgundy flex items-center justify-center shrink-0">
-            <Users className="w-6 h-6" />
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+        <div className="bg-card border border-border/60 rounded-xl md:rounded-2xl p-3 md:p-5 shadow-xl flex items-center gap-2.5 md:gap-4">
+          <div className="w-8 h-8 md:w-12 md:h-12 rounded-lg md:rounded-xl bg-burgundy/10 text-burgundy flex items-center justify-center shrink-0">
+            <Users className="w-4.5 h-4.5 md:w-6 md:h-6" />
           </div>
           <div>
-            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Ekip Boyutu</p>
-            <h3 className="text-2xl font-bold mt-0.5">{totalStaff} Personel</h3>
+            <p className="text-[9px] md:text-xs font-semibold text-muted-foreground uppercase tracking-wider">Ekip Boyutu</p>
+            <h3 className="text-sm md:text-2xl font-bold mt-0.5">{totalStaff} Personel</h3>
           </div>
         </div>
 
-        <div className="bg-card border border-border/60 rounded-2xl p-5 shadow-xl flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-sky-500/10 text-sky-400 flex items-center justify-center shrink-0">
-            <Activity className="w-6 h-6" />
+        <div className="bg-card border border-border/60 rounded-xl md:rounded-2xl p-3 md:p-5 shadow-xl flex items-center gap-2.5 md:gap-4">
+          <div className="w-8 h-8 md:w-12 md:h-12 rounded-lg md:rounded-xl bg-sky-500/10 text-sky-400 flex items-center justify-center shrink-0">
+            <Activity className="w-4.5 h-4.5 md:w-6 md:h-6" />
           </div>
           <div>
-            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Aktif Görevler</p>
-            <h3 className="text-2xl font-bold mt-0.5">{totalActiveTasksCount} Görev</h3>
+            <p className="text-[9px] md:text-xs font-semibold text-muted-foreground uppercase tracking-wider">Aktif Görevler</p>
+            <h3 className="text-sm md:text-2xl font-bold mt-0.5">{totalActiveTasksCount} Görev</h3>
           </div>
         </div>
 
-        <div className="bg-card border border-border/60 rounded-2xl p-5 shadow-xl flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-rose-500/10 text-rose-400 flex items-center justify-center shrink-0">
-            <AlertTriangle className="w-6 h-6" />
+        <div className="bg-card border border-border/60 rounded-xl md:rounded-2xl p-3 md:p-5 shadow-xl flex items-center gap-2.5 md:gap-4">
+          <div className="w-8 h-8 md:w-12 md:h-12 rounded-lg md:rounded-xl bg-rose-500/10 text-rose-400 flex items-center justify-center shrink-0">
+            <AlertTriangle className="w-4.5 h-4.5 md:w-6 md:h-6" />
           </div>
           <div>
-            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Acil Görevler</p>
-            <h3 className="text-2xl font-bold mt-0.5">{totalUrgentTasksCount} Kritik</h3>
+            <p className="text-[9px] md:text-xs font-semibold text-muted-foreground uppercase tracking-wider">Acil Görevler</p>
+            <h3 className="text-sm md:text-2xl font-bold mt-0.5">{totalUrgentTasksCount} Kritik</h3>
           </div>
         </div>
 
-        <div className="bg-card border border-border/60 rounded-2xl p-5 shadow-xl flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center shrink-0">
-            <Briefcase className="w-6 h-6" />
+        <div className="bg-card border border-border/60 rounded-xl md:rounded-2xl p-3 md:p-5 shadow-xl flex items-center gap-2.5 md:gap-4">
+          <div className="w-8 h-8 md:w-12 md:h-12 rounded-lg md:rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center shrink-0">
+            <Briefcase className="w-4.5 h-4.5 md:w-6 md:h-6" />
           </div>
           <div>
-            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Atanmamış İşler</p>
-            <h3 className="text-2xl font-bold mt-0.5">{unassignedTasks.length} Boşta</h3>
+            <p className="text-[9px] md:text-xs font-semibold text-muted-foreground uppercase tracking-wider">Atanmamış İşler</p>
+            <h3 className="text-sm md:text-2xl font-bold mt-0.5">{unassignedTasks.length} Boşta</h3>
           </div>
         </div>
       </div>
