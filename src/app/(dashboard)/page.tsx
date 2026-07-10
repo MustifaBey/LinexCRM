@@ -187,7 +187,7 @@ export default function DashboardPage() {
             <Activity className="w-4 h-4 md:w-5 md:h-5 text-burgundy" />
             Hızlı İşlemler
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-3">
             {quickActions.map((action) => (
               <Link
                 key={action.title}
