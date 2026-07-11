@@ -75,6 +75,12 @@ export function Topbar({ onMenuClick, userProfile }: TopbarProps) {
 
   // Fetch initial notifications and manage Realtime subscription on Client-side
   useEffect(() => {
+    // 4. Anonim İstekleri Engelle
+    if (!user?.id) {
+      setNotifications([]);
+      return;
+    }
+
     const supabase = createSupabaseClient();
     let activeChannel: any = null;
 
@@ -160,37 +166,16 @@ export function Topbar({ onMenuClick, userProfile }: TopbarProps) {
       }
     };
 
-    const handleSessionChange = (session: any) => {
-      if (session?.user) {
-        fetchNotificationsForUser(session.user.id);
-        setupRealtime(session.user.id);
-      } else {
-        setNotifications([]);
-        if (activeChannel) {
-          supabase.removeChannel(activeChannel);
-          activeChannel = null;
-        }
-      }
-    };
-
-    // Initial fetch on mount
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      handleSessionChange(session);
-    });
-
-    // Listen for auth state changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      console.log("[Topbar] Auth state change event:", event, session?.user?.id);
-      handleSessionChange(session);
-    });
+    // Trigger initial fetch and realtime subscription
+    fetchNotificationsForUser(user.id);
+    setupRealtime(user.id);
 
     return () => {
-      subscription.unsubscribe();
       if (activeChannel) {
         supabase.removeChannel(activeChannel);
       }
     };
-  }, [userProfile?.sound_volume]);
+  }, [user?.id, userProfile?.sound_volume]);
 
   // Close notifications dropdown on outside click
   useEffect(() => {

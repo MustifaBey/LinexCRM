@@ -23,12 +23,6 @@ const SUPABASE_ANON_KEY =
  */
 export function createClient() {
   return createBrowserClient<Database>(SUPABASE_URL, SUPABASE_ANON_KEY, {
-    auth: {
-      persistSession: true,
-      storageKey: "linex-crm-auth",
-      storage:
-        typeof window !== "undefined" ? window.localStorage : undefined,
-    },
     global: {
       fetch: (url, options) => fetch(url, { ...options, cache: "no-store" }),
     },
