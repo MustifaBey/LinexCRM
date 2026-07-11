@@ -147,24 +147,24 @@ export function Topbar({ onMenuClick, userProfile }: TopbarProps) {
     };
 
     const fetchNotificationsForUser = async (userId: string) => {
+      console.log('[Topbar] Fetch işlemi başlıyor...');
       try {
-        console.log("[Topbar] Fetching notifications for user:", userId);
         const { data, error } = await supabase
-          .from("notifications")
-          .select("*")
-          .eq("user_id", userId)
-          .order("created_at", { ascending: false });
-
-        console.log("Supabase Ham Yanıtı - Data:", data, "Error:", error);
-
+          .from('notifications')
+          .select('*')
+          .eq('user_id', userId)
+          .order('created_at', { ascending: false });
+        
+        console.log('Supabase Ham Yanıtı:', { data, error }); // Bu satır kesinlikle çalışmalı!
+        
         if (error) {
-          console.error("Bildirim Fetch Hatası:", error);
-        } else if (data) {
-          console.log("[Topbar] Successfully fetched notifications count:", data.length);
-          setNotifications(data as Notification[]);
+          console.error('Supabase Error Döndürdü:', error);
+          return;
         }
+        
+        setNotifications(data || []);
       } catch (err) {
-        console.error("[Topbar] Exception while fetching notifications:", err);
+        console.error('Fetch bloğunda KRİTİK hata yakalandı:', err);
       }
     };
 
