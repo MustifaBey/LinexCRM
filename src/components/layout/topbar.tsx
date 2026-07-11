@@ -3,7 +3,7 @@
 import { useUser } from "@/hooks/use-user";
 import { signOut } from "@/actions/auth";
 import { getSearchData } from "@/actions/projects";
-import { createClient as createSupabaseClient } from "@/lib/supabase/client";
+import { createBrowserClient } from "@supabase/ssr";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useRealtime } from "@/hooks/use-realtime";
@@ -45,12 +45,15 @@ interface TopbarProps {
 export function Topbar({ onMenuClick, userProfile }: TopbarProps) {
   const { user } = useUser();
   const router = useRouter();
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://gmxurdlsoczhnkdjdkqv.supabase.co";
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdteHVyZGxzb2N6aG5rZGpka3F2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1OTQ2NTksImV4cCI6MjA5NjE3MDY1OX0.JfRVYZqhYTAV7bCABvjJlPX1H9v1Cok87B4FZ4kJdkc";
+  const supabase = createBrowserClient(supabaseUrl, supabaseKey);
+
   const [userMenuOpen, setUserMenuOpen] = useState(false);
 
   const handleLogout = async () => {
     try {
       console.log("LOGOUT INITIATED");
-      const supabase = createSupabaseClient();
       await supabase.auth.signOut();
 
       // Nuke local storage to clear any lingering client states
@@ -81,7 +84,6 @@ export function Topbar({ onMenuClick, userProfile }: TopbarProps) {
       return;
     }
 
-    const supabase = createSupabaseClient();
     let activeChannel: any = null;
 
     const setupRealtime = (userId: string) => {
