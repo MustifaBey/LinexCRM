@@ -111,26 +111,29 @@ export function Topbar({ onMenuClick, userProfile }: TopbarProps) {
               const newNotif = payload.new as Notification;
               setNotifications((prev) => [newNotif, ...prev]);
 
-              // Play a custom OGG Audio sound
-              try {
-                const pool = [
-                  "/notify1.ogg",
-                  "/notify2.ogg",
-                  "/notify3.ogg",
-                  "/notify4.ogg",
-                  "/notify5.ogg",
-                  "/notify6.ogg",
-                  "/notify7.ogg",
-                  "/notify8.ogg",
-                  "/notify9.ogg"
-                ];
-                const randomSound = pool[Math.floor(Math.random() * pool.length)];
-                const audio = new Audio(randomSound);
-                const soundVolume = userProfile?.sound_volume ?? 75;
-                audio.volume = soundVolume / 100;
-                audio.play().catch((e) => console.warn("Audio play failed:", e));
-              } catch (audioErr) {
-                console.warn("Audio playback error:", audioErr);
+              // Play a custom OGG Audio sound (only on web, not native Capacitor to avoid double sounds)
+              const isNative = typeof window !== "undefined" && (window as any).Capacitor;
+              if (!isNative) {
+                try {
+                  const pool = [
+                    "/notify1.ogg",
+                    "/notify2.ogg",
+                    "/notify3.ogg",
+                    "/notify4.ogg",
+                    "/notify5.ogg",
+                    "/notify6.ogg",
+                    "/notify7.ogg",
+                    "/notify8.ogg",
+                    "/notify9.ogg"
+                  ];
+                  const randomSound = pool[Math.floor(Math.random() * pool.length)];
+                  const audio = new Audio(randomSound);
+                  const soundVolume = userProfile?.sound_volume ?? 75;
+                  audio.volume = soundVolume / 100;
+                  audio.play().catch((e) => console.warn("Audio play failed:", e));
+                } catch (audioErr) {
+                  console.warn("Audio playback error:", audioErr);
+                }
               }
             } else if (payload.eventType === "UPDATE") {
               const updatedNotif = payload.new as Notification;

@@ -64,7 +64,7 @@ export function GlobalNotificationListener({ userId }: { userId?: string }) {
           // Register with FCM/APNs to receive push notifications
           await PushNotifications.register();
 
-          // Create Android High Importance Channel
+          // Create Android High Importance Channel V2
           if (Capacitor.getPlatform() === 'android') {
             try {
               await PushNotifications.createChannel({
@@ -73,7 +73,7 @@ export function GlobalNotificationListener({ userId }: { userId?: string }) {
                 description: 'Uygulama içi uyarılar ve mesajlar',
                 importance: 5, // 5 = MAX (Heads-up pop-up açar)
                 visibility: 1, // Kilit ekranında görünür
-                sound: 'ozel_ses', // res/raw/ozel_ses.mp3 veya ozel_ses.wav (uzantısız)
+                sound: 'notify1', // res/raw/notify1.ogg (uzantısız)
                 vibration: true,
               });
               console.log("[PushNotifications] Android High Importance channel v2 created successfully.");

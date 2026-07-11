@@ -175,6 +175,10 @@ serve(async (req) => {
     const accessToken = await getGoogleAccessToken(fcmClientEmail, fcmPrivateKey);
 
     // 6. Build FCM v1 Payload
+    const randomSoundNum = Math.floor(Math.random() * 9) + 1;
+    const soundName = `notify${randomSoundNum}`;
+    const channelId = `high_importance_v2`;
+
     const fcmPayload = {
       message: {
         token: fcmToken,
@@ -185,8 +189,8 @@ serve(async (req) => {
         android: {
           priority: "high",
           notification: {
-            channel_id: "high_importance_v2",
-            sound: "ozel_ses",
+            channel_id: channelId,
+            sound: soundName,
             click_action: ".MainActivity",
           },
         },
