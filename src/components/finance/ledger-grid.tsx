@@ -486,11 +486,11 @@ export function LedgerGrid({
                   <th className="px-5 py-4 w-[120px]">Tarih</th>
                   <th className="px-5 py-4 w-[200px]">Açıklama</th>
                   <th className="px-5 py-4 w-[160px]">Müşteri / Proje</th>
-                  <th className="px-5 py-4 w-[130px]">Tür</th>
-                  <th className="px-5 py-4 w-[160px]">Kategori</th>
+                  <th className="px-5 py-4 w-[100px]">Tür</th>
+                  <th className="px-5 py-4 w-[140px]">Kategori</th>
                   <th className="px-5 py-4 w-[140px]">Miktar</th>
                   <th className="px-5 py-4 w-[110px]">Tekrarlayan</th>
-                  <th className="px-5 py-4 w-[90px] text-right">İşlemler</th>
+                  <th className="px-5 py-4 w-[140px] text-right">İşlemler</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border/40 text-xs">

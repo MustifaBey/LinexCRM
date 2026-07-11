@@ -43,22 +43,22 @@ export const KanbanColumn = memo(function KanbanColumn({
   return (
     <div
       className={cn(
-        "flex flex-col w-[300px] min-w-[300px] rounded-2xl bg-surface/50 border border-border/50 transition-all duration-300",
+        "flex flex-col w-[275px] min-w-[275px] md:w-[300px] md:min-w-[300px] rounded-2xl bg-surface/50 border border-border/50 transition-all duration-300",
         isOver && "border-primary/40 bg-primary/5 shadow-lg shadow-primary/5"
       )}
     >
       {/* Column header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-border/50">
-        <div className="flex items-center gap-2.5">
+      <div className="flex items-center justify-between px-3 py-2.5 md:px-4 md:py-3 border-b border-border/50">
+        <div className="flex items-center gap-2">
           {/* Color indicator dot */}
           <div
             className="w-2.5 h-2.5 rounded-full flex-shrink-0"
             style={{ backgroundColor: column.color || "#800020" }}
           />
-          <h3 className="text-sm font-semibold text-foreground">
+          <h3 className="text-xs md:text-sm font-semibold text-foreground truncate max-w-[140px] md:max-w-none">
             {column.title}
           </h3>
-          <span className="flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full bg-muted text-[10px] font-bold text-muted-foreground">
+          <span className="flex items-center justify-center min-w-[18px] h-4.5 px-1 rounded-full bg-muted text-[9px] md:text-[10px] font-bold text-muted-foreground">
             {tasks.length}
           </span>
         </div>
@@ -74,7 +74,7 @@ export const KanbanColumn = memo(function KanbanColumn({
 
       <div
         ref={setNodeRef}
-        className="flex-1 overflow-y-auto p-2 space-y-2 min-h-full"
+        className="flex-1 overflow-y-auto p-1.5 md:p-2 space-y-1.5 md:space-y-2 min-h-full"
       >
         <SortableContext items={taskIds} strategy={verticalListSortingStrategy}>
           {tasks.map((task) => (
