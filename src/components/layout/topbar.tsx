@@ -155,6 +155,8 @@ export function Topbar({ onMenuClick, userProfile }: TopbarProps) {
           .eq("user_id", userId)
           .order("created_at", { ascending: false });
 
+        console.log("Supabase Ham Yanıtı - Data:", data, "Error:", error);
+
         if (error) {
           console.error("Bildirim Fetch Hatası:", error);
         } else if (data) {
