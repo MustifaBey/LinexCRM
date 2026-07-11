@@ -157,11 +157,11 @@ serve(async (req) => {
       );
     }
 
-    // 4. Retrieve Firebase credentials from secrets
-    const fcmClientEmail = Deno.env.get("FCM_CLIENT_EMAIL");
-    const fcmPrivateKey = Deno.env.get("FCM_PRIVATE_KEY");
-    const fcmProjectId = Deno.env.get("FCM_PROJECT_ID");
-
+    // 4. Retrieve Firebase credentials from secrets (support both FIREBASE_ and FCM_ prefixes)
+    const fcmClientEmail = Deno.env.get("FIREBASE_CLIENT_EMAIL") || Deno.env.get("FCM_CLIENT_EMAIL");
+    const fcmPrivateKey = Deno.env.get("FIREBASE_PRIVATE_KEY") || Deno.env.get("FCM_PRIVATE_KEY");
+    const fcmProjectId = Deno.env.get("FIREBASE_PROJECT_ID") || Deno.env.get("FCM_PROJECT_ID");
+ 
     if (!fcmClientEmail || !fcmPrivateKey || !fcmProjectId) {
       console.error("[Webhook] Missing FCM credentials in Edge Function environment variables.");
       return new Response(
