@@ -43,7 +43,7 @@ export const KanbanColumn = memo(function KanbanColumn({
   return (
     <div
       className={cn(
-        "flex flex-col w-[275px] min-w-[275px] md:w-[300px] md:min-w-[300px] rounded-2xl bg-surface/50 border border-border/50 transition-all duration-300",
+        "flex flex-col w-[255px] min-w-[255px] md:w-[300px] md:min-w-[300px] rounded-2xl bg-surface/50 border border-border/50 transition-all duration-300",
         isOver && "border-primary/40 bg-primary/5 shadow-lg shadow-primary/5"
       )}
     >
@@ -74,7 +74,7 @@ export const KanbanColumn = memo(function KanbanColumn({
 
       <div
         ref={setNodeRef}
-        className="flex-1 overflow-y-auto p-1.5 md:p-2 space-y-1.5 md:space-y-2 min-h-full"
+        className="flex-1 md:overflow-y-auto overflow-y-visible p-1.5 md:p-2 space-y-1.5 md:space-y-2 h-auto md:h-full [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
       >
         <SortableContext items={taskIds} strategy={verticalListSortingStrategy}>
           {tasks.map((task) => (
