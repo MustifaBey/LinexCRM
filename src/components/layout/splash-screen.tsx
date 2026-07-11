@@ -43,12 +43,6 @@ export function SplashScreen({ isLoading }: SplashScreenProps) {
               e.currentTarget.style.display = "none";
             }}
           />
-          {/* Logo Text Overlay (only displayed as styling overlay or if image fails) */}
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-neutral-200 to-neutral-400 font-extrabold text-4xl tracking-widest font-mono select-none opacity-10">
-              LINEX
-            </span>
-          </div>
         </div>
 
         <div className="flex flex-col items-center gap-3">
