@@ -101,6 +101,80 @@ export function SupabaseProvider({ children }: SupabaseProviderProps) {
     };
   }, []);
 
+  useEffect(() => {
+    const isNative = typeof window !== "undefined" && (window as any).Capacitor;
+    if (!isNative) return;
+
+    let appListener: any;
+    
+    const initDeepLink = async () => {
+      try {
+        const supabase = createClient();
+        const { App } = await import("@capacitor/app");
+        appListener = await App.addListener("appUrlOpen", async (data: { url: string }) => {
+          console.log("[DeepLink] App opened with URL:", data.url);
+          try {
+            const parsedUrl = new URL(data.url);
+            
+            // 1. Handle hash fragments (e.g. access_token=...)
+            const hash = parsedUrl.hash;
+            if (hash) {
+              const params = new URLSearchParams(hash.substring(1));
+              const accessToken = params.get("access_token");
+              const refreshToken = params.get("refresh_token");
+              const type = params.get("type");
+              
+              if (accessToken && refreshToken) {
+                console.log("[DeepLink] Authenticating via token session...");
+                const { error } = await supabase.auth.setSession({
+                  access_token: accessToken,
+                  refresh_token: refreshToken,
+                });
+                
+                if (error) {
+                  console.error("[DeepLink] setSession error:", error);
+                } else {
+                  console.log("[DeepLink] Session authenticated successfully!");
+                  await refreshProfile();
+                  
+                  if (type === "recovery") {
+                    console.log("[DeepLink] Password recovery type detected, redirecting to reset page...");
+                    window.location.href = "/sifre-yenile" + hash;
+                  }
+                }
+              }
+            }
+            
+            // 2. Handle search params (e.g. code=...)
+            const code = parsedUrl.searchParams.get("code");
+            if (code) {
+              console.log("[DeepLink] Exchanging code for session...");
+              const { error } = await supabase.auth.exchangeCodeForSession(code);
+              if (error) {
+                console.error("[DeepLink] exchangeCodeForSession error:", error);
+              } else {
+                console.log("[DeepLink] Code exchange successful!");
+                await refreshProfile();
+              }
+            }
+          } catch (urlErr) {
+            console.error("[DeepLink] Error parsing URL:", urlErr);
+          }
+        });
+      } catch (err) {
+        console.error("[DeepLink] Failed to register appUrlOpen listener:", err);
+      }
+    };
+
+    initDeepLink();
+
+    return () => {
+      if (appListener) {
+        appListener.remove();
+      }
+    };
+  }, []);
+
   const refreshProfile = async () => {
     try {
       const supabase = createClient();

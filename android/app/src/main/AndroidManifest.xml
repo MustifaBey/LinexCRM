@@ -27,6 +27,13 @@
                 <action android:name=".MainActivity" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="https" android:host="linex-crm.vercel.app" />
+                <data android:scheme="https" android:host="linexcrm.com" />
+            </intent-filter>
         </activity>
 
         <provider

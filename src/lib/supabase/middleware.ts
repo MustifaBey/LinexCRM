@@ -41,7 +41,8 @@ export async function updateSession(request: NextRequest) {
   // Protected routes: redirect to login if not authenticated
   const isAuthRoute =
     request.nextUrl.pathname.startsWith("/login") ||
-    request.nextUrl.pathname.startsWith("/signup");
+    request.nextUrl.pathname.startsWith("/signup") ||
+    request.nextUrl.pathname.startsWith("/sifre-yenile");
 
   if (!user && !isAuthRoute && request.nextUrl.pathname !== "/") {
     const url = request.nextUrl.clone();
