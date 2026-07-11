@@ -41,7 +41,7 @@ export function PortalShell({ userProfile, children }: PortalShellProps) {
       <header className="h-16 border-b border-border bg-card/45 backdrop-blur-md flex items-center justify-between pl-3 pr-3 md:pl-6 md:pr-[130px] shrink-0 z-50 shadow-sm select-none">
         {/* Left: Logo */}
         <Link href="/portal" className="flex items-center shrink-0 hover:opacity-90 transition-all">
-          <img src="/logo.png" alt="Linex Medya Logo" className="h-8 md:h-10 w-auto object-contain shrink-0" />
+          <img src="/logo.png" alt="Linex Medya Logo" className="h-10 md:h-10 w-auto object-contain shrink-0" />
         </Link>
 
         {/* Right: User Profile + Tickets + Logout */}

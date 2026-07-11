@@ -54,7 +54,7 @@ export const KanbanCard = memo(function KanbanCard({ task, onEdit, isDragOverlay
       ref={setNodeRef}
       style={style}
       className={cn(
-        "group relative rounded-xl bg-card border border-border p-3.5 cursor-pointer transition-all duration-200",
+        "group relative rounded-xl bg-card border border-border p-2.5 md:p-3.5 cursor-pointer transition-all duration-200",
         "hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5",
         isDragging && "opacity-40 rotate-2 scale-105",
         isDragOverlay &&
@@ -66,16 +66,17 @@ export const KanbanCard = memo(function KanbanCard({ task, onEdit, isDragOverlay
       <button
         {...attributes}
         {...listeners}
-        className="absolute top-2 right-2 p-1 rounded-md opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-foreground hover:bg-muted transition-all cursor-grab active:cursor-grabbing"
+        style={{ touchAction: "none" }}
+        className="absolute top-1.5 right-1.5 md:top-2 md:right-2 p-1 md:p-1.5 rounded-md opacity-100 md:opacity-0 md:group-hover:opacity-100 bg-muted/30 md:bg-transparent text-muted-foreground hover:text-foreground hover:bg-muted transition-all cursor-grab active:cursor-grabbing z-10"
         onClick={(e) => e.stopPropagation()}
         aria-label="Drag to reorder"
       >
-        <GripVertical className="w-3.5 h-3.5" />
+        <GripVertical className="w-[18px] h-[18px] md:w-3.5 md:h-3.5" />
       </button>
 
       {/* Labels */}
       {task.labels && task.labels.length > 0 && (
-        <div className="flex flex-wrap gap-1 mb-2">
+        <div className="flex flex-wrap gap-1 mb-1.5 md:mb-2">
           {task.labels.slice(0, 3).map((label) => (
             <span
               key={label}
@@ -88,19 +89,19 @@ export const KanbanCard = memo(function KanbanCard({ task, onEdit, isDragOverlay
       )}
 
       {/* Title */}
-      <h4 className="text-sm font-medium text-foreground leading-snug pr-6 line-clamp-2 break-words">
+      <h4 className="text-sm font-medium text-foreground leading-snug pr-7 md:pr-6 line-clamp-2 break-words">
         {task.title}
       </h4>
 
       {/* Description preview */}
       {task.description && (
-        <p className="text-xs text-muted-foreground mt-1.5 line-clamp-2 break-words">
+        <p className="text-xs text-muted-foreground mt-1 md:mt-1.5 line-clamp-2 break-words">
           {task.description}
         </p>
       )}
 
       {/* Bottom metadata row */}
-      <div className="flex items-center justify-between mt-3 pt-2.5 border-t border-border/50">
+      <div className="flex items-center justify-between mt-2 pt-2 md:mt-3 md:pt-2.5 border-t border-border/50">
         <div className="flex items-center gap-2">
           {/* Priority badge */}
           {priority && (
