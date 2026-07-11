@@ -73,72 +73,124 @@ export function Topbar({ onMenuClick, userProfile }: TopbarProps) {
   const [notifDropdownOpen, setNotifDropdownOpen] = useState(false);
   const notifDropdownRef = useRef<HTMLDivElement>(null);
 
-  // Fetch initial notifications
+  // Fetch initial notifications and manage Realtime subscription on Client-side
   useEffect(() => {
-    if (user?.id) {
-      const fetchNotifications = async () => {
-        try {
-          const supabase = createSupabaseClient();
-          const { data, error } = await supabase
-            .from("notifications")
-            .select("*")
-            .eq("user_id", user.id)
-            .order("created_at", { ascending: false });
+    const supabase = createSupabaseClient();
+    let activeChannel: any = null;
 
-          if (error) {
-            console.error("Error loading notifications:", error);
-          } else if (data) {
-            setNotifications(data as Notification[]);
-          }
-        } catch (err) {
-          console.error("Failed to fetch notifications on client:", err);
-        }
-      };
-      fetchNotifications();
-    }
-  }, [user]);
-
-  // Realtime notifications listener
-  useRealtime<Notification>({
-    table: "notifications",
-    filterColumn: "user_id",
-    filterValue: user?.id,
-    onInsert: (newNotif) => {
-      setNotifications((prev) => [newNotif, ...prev]);
-      
-      // Play a custom OGG Audio sound
-      try {
-        const pool = [
-          "/notify1.ogg",
-          "/notify2.ogg",
-          "/notify3.ogg",
-          "/notify4.ogg",
-          "/notify5.ogg",
-          "/notify6.ogg",
-          "/notify7.ogg",
-          "/notify8.ogg",
-          "/notify9.ogg"
-        ];
-        const randomSound = pool[Math.floor(Math.random() * pool.length)];
-        const audio = new Audio(randomSound);
-        const soundVolume = userProfile?.sound_volume ?? 75;
-        audio.volume = soundVolume / 100;
-        audio.play().catch((e) => console.warn("Audio play failed:", e));
-      } catch (audioErr) {
-        console.warn("Audio playback error:", audioErr);
+    const setupRealtime = (userId: string) => {
+      // Clean up previous channel if exists
+      if (activeChannel) {
+        supabase.removeChannel(activeChannel);
       }
-    },
-    onUpdate: (updatedNotif) => {
-      setNotifications((prev) =>
-        prev.map((n) => (n.id === updatedNotif.id ? updatedNotif : n))
-      );
-    },
-    onDelete: (deletedNotif) => {
-      if (!deletedNotif.id) return;
-      setNotifications((prev) => prev.filter((n) => n.id !== deletedNotif.id));
-    },
-    enabled: !!user?.id,
-  });
+
+      console.log("[Topbar] Subscribing to Realtime notifications for user:", userId);
+      
+      // Setup realtime channel
+      activeChannel = supabase
+        .channel(`realtime:notifications:user_id:${userId}`)
+        .on(
+          "postgres_changes",
+          {
+            event: "*",
+            schema: "public",
+            table: "notifications",
+            filter: `user_id=eq.${userId}`
+          },
+          (payload: any) => {
+            console.log("[Topbar] Realtime event payload received:", payload);
+            if (payload.eventType === "INSERT") {
+              const newNotif = payload.new as Notification;
+              setNotifications((prev) => [newNotif, ...prev]);
+
+              // Play a custom OGG Audio sound
+              try {
+                const pool = [
+                  "/notify1.ogg",
+                  "/notify2.ogg",
+                  "/notify3.ogg",
+                  "/notify4.ogg",
+                  "/notify5.ogg",
+                  "/notify6.ogg",
+                  "/notify7.ogg",
+                  "/notify8.ogg",
+                  "/notify9.ogg"
+                ];
+                const randomSound = pool[Math.floor(Math.random() * pool.length)];
+                const audio = new Audio(randomSound);
+                const soundVolume = userProfile?.sound_volume ?? 75;
+                audio.volume = soundVolume / 100;
+                audio.play().catch((e) => console.warn("Audio play failed:", e));
+              } catch (audioErr) {
+                console.warn("Audio playback error:", audioErr);
+              }
+            } else if (payload.eventType === "UPDATE") {
+              const updatedNotif = payload.new as Notification;
+              setNotifications((prev) =>
+                prev.map((n) => (n.id === updatedNotif.id ? updatedNotif : n))
+              );
+            } else if (payload.eventType === "DELETE") {
+              const deletedNotif = payload.old as Partial<Notification>;
+              if (deletedNotif.id) {
+                setNotifications((prev) => prev.filter((n) => n.id !== deletedNotif.id));
+              }
+            }
+          }
+        )
+        .subscribe();
+    };
+
+    const fetchNotificationsForUser = async (userId: string) => {
+      try {
+        console.log("[Topbar] Fetching notifications for user:", userId);
+        const { data, error } = await supabase
+          .from("notifications")
+          .select("*")
+          .eq("user_id", userId)
+          .order("created_at", { ascending: false });
+
+        if (error) {
+          console.error("Bildirim Fetch Hatası:", error);
+        } else if (data) {
+          console.log("[Topbar] Successfully fetched notifications count:", data.length);
+          setNotifications(data as Notification[]);
+        }
+      } catch (err) {
+        console.error("[Topbar] Exception while fetching notifications:", err);
+      }
+    };
+
+    const handleSessionChange = (session: any) => {
+      if (session?.user) {
+        fetchNotificationsForUser(session.user.id);
+        setupRealtime(session.user.id);
+      } else {
+        setNotifications([]);
+        if (activeChannel) {
+          supabase.removeChannel(activeChannel);
+          activeChannel = null;
+        }
+      }
+    };
+
+    // Initial fetch on mount
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      handleSessionChange(session);
+    });
+
+    // Listen for auth state changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log("[Topbar] Auth state change event:", event, session?.user?.id);
+      handleSessionChange(session);
+    });
+
+    return () => {
+      subscription.unsubscribe();
+      if (activeChannel) {
+        supabase.removeChannel(activeChannel);
+      }
+    };
+  }, [userProfile?.sound_volume]);
 
   // Close notifications dropdown on outside click
   useEffect(() => {
