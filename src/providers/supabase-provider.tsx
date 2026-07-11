@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { SplashScreen } from "@/components/layout/splash-screen";
 import type { Profile } from "@/types/database";
 import type { User } from "@supabase/supabase-js";
 
@@ -128,6 +129,7 @@ export function SupabaseProvider({ children }: SupabaseProviderProps) {
   return (
     <SupabaseContext.Provider value={{ user, profile, isLoading, refreshProfile }}>
       {children}
+      <SplashScreen isLoading={isLoading} />
     </SupabaseContext.Provider>
   );
 }
