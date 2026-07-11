@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 
 import { toast } from "sonner";
-import { X, UploadCloud, Loader2, FileUp } from "lucide-react";
+import { X, UploadCloud, Loader2, FileUp, Camera, Image } from "lucide-react";
 import { cn, generateClientThumbnail, resizeImage } from "@/lib/utils";
 
 interface UploadDialogProps {
@@ -37,6 +37,36 @@ export function UploadDialog({
   const [targetClient, setTargetClient] = useState(initialClientId);
   const [selectedUploadFile, setSelectedUploadFile] = useState<File | null>(null);
   const [uploadProgress, setUploadProgress] = useState<number | null>(null);
+  const [showCameraSourcePicker, setShowCameraSourcePicker] = useState(false);
+
+  const handleCapacitorCamera = async (sourceType: "camera" | "photos") => {
+    setShowCameraSourcePicker(false);
+    try {
+      const { Camera, CameraResultType, CameraSource } = await import("@capacitor/camera");
+      const photo = await Camera.getPhoto({
+        quality: 90,
+        allowEditing: false,
+        resultType: CameraResultType.Uri,
+        source: sourceType === "camera" ? CameraSource.Camera : CameraSource.Photos
+      });
+
+      if (photo && photo.webPath) {
+        const res = await fetch(photo.webPath);
+        const blob = await res.blob();
+        const fileExt = photo.format || "jpg";
+        const rawFile = new File([blob], `camera_${Date.now()}.${fileExt}`, { type: `image/${fileExt === "png" ? "png" : "jpeg"}` });
+        
+        // Resize and compress image to max 1024px width before uploading
+        const optimizedFile = await resizeImage(rawFile);
+        setSelectedUploadFile(optimizedFile);
+      }
+    } catch (cameraErr: any) {
+      if (cameraErr?.message !== "User cancelled photos app" && cameraErr?.message !== "User cancelled photo selection") {
+        console.error("Capacitor camera error:", cameraErr);
+        toast.error("Görsel seçilemedi.");
+      }
+    }
+  };
 
   // Sync initial selections when open state changes
   useEffect(() => {
@@ -229,37 +259,12 @@ export function UploadDialog({
                   ? "border-burgundy/60 bg-burgundy/5"
                   : "border-border hover:border-burgundy/40 hover:bg-muted/30"
               }`}
-              onClick={async () => {
+              onClick={() => {
                 if (isSubmitting) return;
 
                 const isNative = typeof window !== "undefined" && (window as any).Capacitor;
                 if (isNative) {
-                  try {
-                    const { Camera, CameraResultType, CameraSource } = await import("@capacitor/camera");
-                    const photo = await Camera.getPhoto({
-                      quality: 90,
-                      allowEditing: false,
-                      resultType: CameraResultType.Uri,
-                      source: CameraSource.Prompt // Prompts user to choose between Camera or Gallery
-                    });
-
-                    if (photo && photo.webPath) {
-                      const res = await fetch(photo.webPath);
-                      const blob = await res.blob();
-                      const fileExt = photo.format || "jpg";
-                      const rawFile = new File([blob], `camera_${Date.now()}.${fileExt}`, { type: `image/${fileExt === "png" ? "png" : "jpeg"}` });
-                      
-                      // Resize and compress image to max 1024px width before uploading
-                      const optimizedFile = await resizeImage(rawFile);
-                      setSelectedUploadFile(optimizedFile);
-                    }
-                  } catch (cameraErr: any) {
-                    // Ignore user cancellation errors
-                    if (cameraErr?.message !== "User cancelled photos app" && cameraErr?.message !== "User cancelled photo selection") {
-                      console.error("Capacitor camera error:", cameraErr);
-                      toast.error("Görsel seçilemedi.");
-                    }
-                  }
+                  setShowCameraSourcePicker(true);
                 } else {
                   document.getElementById("dialog-file-input")?.click();
                 }
@@ -338,6 +343,44 @@ export function UploadDialog({
             )}
           </button>
         </div>
+
+        {/* Camera/Gallery Source Picker for Mobile */}
+        {showCameraSourcePicker && (
+          <div className="absolute inset-0 z-50 flex flex-col justify-end bg-black/75 animate-in fade-in duration-200">
+            <div className="absolute inset-0" onClick={() => setShowCameraSourcePicker(false)} />
+            <div className="relative w-full rounded-t-3xl bg-neutral-950 border-t border-neutral-800/80 p-6 space-y-5 animate-in slide-in-from-bottom duration-300 shadow-[0_-10px_30px_rgba(0,0,0,0.8)]">
+              <div className="w-12 h-1 bg-neutral-800 rounded-full mx-auto mb-2" />
+              <h3 className="text-xs font-semibold text-center text-muted-foreground uppercase tracking-widest select-none">
+                GÖRSEL YÜKLEME KAYNAĞI
+              </h3>
+              <div className="grid grid-cols-2 gap-4">
+                <button
+                  type="button"
+                  onClick={() => handleCapacitorCamera("camera")}
+                  className="flex flex-col items-center justify-center p-5 rounded-2xl bg-neutral-900 border border-neutral-800 hover:bg-neutral-800/50 hover:border-neutral-700/80 active:scale-95 transition-all text-foreground font-medium gap-3 cursor-pointer"
+                >
+                  <Camera className="w-8 h-8 text-burgundy" />
+                  <span className="text-sm">Fotoğraf Çek</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleCapacitorCamera("photos")}
+                  className="flex flex-col items-center justify-center p-5 rounded-2xl bg-neutral-900 border border-neutral-800 hover:bg-neutral-800/50 hover:border-neutral-700/80 active:scale-95 transition-all text-foreground font-medium gap-3 cursor-pointer"
+                >
+                  <Image className="w-8 h-8 text-burgundy" />
+                  <span className="text-sm">Galeriden Seç</span>
+                </button>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowCameraSourcePicker(false)}
+                className="w-full h-11 rounded-xl bg-neutral-900 hover:bg-neutral-800 border border-neutral-800 text-muted-foreground font-medium text-sm hover:text-foreground active:scale-98 transition-all cursor-pointer"
+              >
+                Vazgeç
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
