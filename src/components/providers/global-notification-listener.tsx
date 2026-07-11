@@ -63,6 +63,24 @@ export function GlobalNotificationListener({ userId }: { userId?: string }) {
         if (permStatus.receive === "granted") {
           // Register with FCM/APNs to receive push notifications
           await PushNotifications.register();
+
+          // Create Android High Importance Channel
+          if (Capacitor.getPlatform() === 'android') {
+            try {
+              await PushNotifications.createChannel({
+                id: 'high_importance_channel',
+                name: 'Önemli Bildirimler',
+                description: 'Uygulama içi uyarılar ve mesajlar',
+                importance: 5, // 5 = MAX (Heads-up pop-up açar)
+                visibility: 1, // Kilit ekranında görünür
+                sound: 'default', // Medya sesi yerine sistem bildirim sesini kullanır
+                vibration: true,
+              });
+              console.log("[PushNotifications] Android High Importance channel created successfully.");
+            } catch (chanErr) {
+              console.error("[PushNotifications] Failed to create Android notification channel:", chanErr);
+            }
+          }
         } else {
           console.warn("[PushNotifications] Permission not granted for native push.");
         }
