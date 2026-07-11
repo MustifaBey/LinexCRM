@@ -24,7 +24,7 @@ export default async function CalendarPage({ searchParams }: CalendarPageProps) 
   const posts = Array.isArray(postsRes) ? postsRes : ((postsRes as any).data || []);
 
   return (
-    <div className="p-6 space-y-6 max-w-7xl mx-auto">
+    <div className="px-0 py-4 md:p-0 space-y-6 max-w-7xl mx-auto">
       <div className="flex flex-col gap-1">
         <h1 className="text-3xl font-bold tracking-tight text-foreground">İçerik Takvimi</h1>
         <p className="text-sm text-muted-foreground">
