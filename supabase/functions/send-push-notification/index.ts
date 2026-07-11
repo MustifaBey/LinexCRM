@@ -183,11 +183,11 @@ serve(async (req) => {
           body: message || "Yeni bir bildiriminiz var.",
         },
         android: {
-          priority: "HIGH",
+          priority: "high",
           notification: {
             channel_id: "high_importance_channel",
             sound: "default",
-            click_action: "OPEN_ACTIVITY",
+            click_action: ".MainActivity",
           },
         },
         apns: {
