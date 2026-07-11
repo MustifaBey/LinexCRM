@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "50219731226",
+    "project_id": "linex--crm",
+    "storage_bucket": "linex--crm.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:50219731226:android:48bd6b749e14a09c8f04a3",
+        "android_client_info": {
+          "package_name": "com.linexmedya.crm"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDjAqiHOu7AYc9aIbiqA2ONSOkTM78gOaE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

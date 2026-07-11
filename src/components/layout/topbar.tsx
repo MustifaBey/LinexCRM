@@ -76,9 +76,25 @@ export function Topbar({ onMenuClick, userProfile }: TopbarProps) {
   // Fetch initial notifications
   useEffect(() => {
     if (user?.id) {
-      getNotifications().then((res) => {
-        if (res.data) setNotifications(res.data as Notification[]);
-      });
+      const fetchNotifications = async () => {
+        try {
+          const supabase = createSupabaseClient();
+          const { data, error } = await supabase
+            .from("notifications")
+            .select("*")
+            .eq("user_id", user.id)
+            .order("created_at", { ascending: false });
+
+          if (error) {
+            console.error("Error loading notifications:", error);
+          } else if (data) {
+            setNotifications(data as Notification[]);
+          }
+        } catch (err) {
+          console.error("Failed to fetch notifications on client:", err);
+        }
+      };
+      fetchNotifications();
     }
   }, [user]);
 
