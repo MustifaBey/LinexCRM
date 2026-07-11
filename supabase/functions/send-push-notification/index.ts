@@ -185,8 +185,8 @@ serve(async (req) => {
         android: {
           priority: "high",
           notification: {
-            channel_id: "high_importance_channel",
-            sound: "default",
+            channel_id: "high_importance_v2",
+            sound: "ozel_ses",
             click_action: ".MainActivity",
           },
         },

@@ -68,15 +68,15 @@ export function GlobalNotificationListener({ userId }: { userId?: string }) {
           if (Capacitor.getPlatform() === 'android') {
             try {
               await PushNotifications.createChannel({
-                id: 'high_importance_channel',
-                name: 'Önemli Bildirimler',
+                id: 'high_importance_v2',
+                name: 'Önemli Bildirimler V2',
                 description: 'Uygulama içi uyarılar ve mesajlar',
                 importance: 5, // 5 = MAX (Heads-up pop-up açar)
                 visibility: 1, // Kilit ekranında görünür
-                sound: 'default', // Medya sesi yerine sistem bildirim sesini kullanır
+                sound: 'ozel_ses', // res/raw/ozel_ses.mp3 veya ozel_ses.wav (uzantısız)
                 vibration: true,
               });
-              console.log("[PushNotifications] Android High Importance channel created successfully.");
+              console.log("[PushNotifications] Android High Importance channel v2 created successfully.");
             } catch (chanErr) {
               console.error("[PushNotifications] Failed to create Android notification channel:", chanErr);
             }
