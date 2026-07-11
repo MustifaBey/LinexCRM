@@ -152,3 +152,62 @@ export function generateClientThumbnail(
   });
 }
 
+/**
+ * Resizes an image file to a maximum width of 1024px and compresses it to jpeg
+ * Returns the original file if it's not an image or if resize fails
+ */
+export function resizeImage(
+  file: File,
+  maxWidth = 1024,
+  quality = 0.85
+): Promise<File> {
+  return new Promise((resolve) => {
+    if (typeof window === "undefined" || !file.type.startsWith("image/")) {
+      resolve(file);
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+        if (!ctx) {
+          resolve(file);
+          return;
+        }
+
+        const scale = Math.min(1, maxWidth / img.width);
+        if (scale === 1) {
+          resolve(file);
+          return;
+        }
+
+        canvas.width = img.width * scale;
+        canvas.height = img.height * scale;
+
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        canvas.toBlob(
+          (blob) => {
+            if (blob) {
+              const resizedFile = new File([blob], file.name, {
+                type: "image/jpeg",
+                lastModified: Date.now(),
+              });
+              resolve(resizedFile);
+            } else {
+              resolve(file);
+            }
+          },
+          "image/jpeg",
+          quality
+        );
+      };
+      img.onerror = () => resolve(file);
+      img.src = e.target?.result as string;
+    };
+    reader.onerror = () => resolve(file);
+    reader.readAsDataURL(file);
+  });
+}
+

@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 
 import { toast } from "sonner";
 import { X, UploadCloud, Loader2, FileUp } from "lucide-react";
-import { cn, generateClientThumbnail } from "@/lib/utils";
+import { cn, generateClientThumbnail, resizeImage } from "@/lib/utils";
 
 interface UploadDialogProps {
   open: boolean;
@@ -229,16 +229,54 @@ export function UploadDialog({
                   ? "border-burgundy/60 bg-burgundy/5"
                   : "border-border hover:border-burgundy/40 hover:bg-muted/30"
               }`}
-              onClick={() => !isSubmitting && document.getElementById("dialog-file-input")?.click()}
+              onClick={async () => {
+                if (isSubmitting) return;
+
+                const isNative = typeof window !== "undefined" && (window as any).Capacitor;
+                if (isNative) {
+                  try {
+                    const { Camera, CameraResultType, CameraSource } = await import("@capacitor/camera");
+                    const photo = await Camera.getPhoto({
+                      quality: 90,
+                      allowEditing: false,
+                      resultType: CameraResultType.Uri,
+                      source: CameraSource.Prompt // Prompts user to choose between Camera or Gallery
+                    });
+
+                    if (photo && photo.webPath) {
+                      const res = await fetch(photo.webPath);
+                      const blob = await res.blob();
+                      const fileExt = photo.format || "jpg";
+                      const rawFile = new File([blob], `camera_${Date.now()}.${fileExt}`, { type: `image/${fileExt === "png" ? "png" : "jpeg"}` });
+                      
+                      // Resize and compress image to max 1024px width before uploading
+                      const optimizedFile = await resizeImage(rawFile);
+                      setSelectedUploadFile(optimizedFile);
+                    }
+                  } catch (cameraErr: any) {
+                    // Ignore user cancellation errors
+                    if (cameraErr?.message !== "User cancelled photos app" && cameraErr?.message !== "User cancelled photo selection") {
+                      console.error("Capacitor camera error:", cameraErr);
+                      toast.error("Görsel seçilemedi.");
+                    }
+                  }
+                } else {
+                  document.getElementById("dialog-file-input")?.click();
+                }
+              }}
             >
               <input
                 type="file"
                 id="dialog-file-input"
                 className="hidden"
                 disabled={isSubmitting}
-                onChange={(e) => {
+                onChange={async (e) => {
                   const f = e.target.files?.[0];
-                  if (f) setSelectedUploadFile(f);
+                  if (f) {
+                    // Resize and compress image to max 1024px width before uploading
+                    const optimizedFile = await resizeImage(f);
+                    setSelectedUploadFile(optimizedFile);
+                  }
                 }}
               />
               <UploadCloud className="w-10 h-10 mx-auto text-muted-foreground/80 mb-2.5" />
