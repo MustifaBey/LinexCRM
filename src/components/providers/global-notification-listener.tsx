@@ -86,9 +86,21 @@ export function GlobalNotificationListener({ userId }: { userId?: string }) {
         }
 
         // Listeners for native push events
-        await PushNotifications.addListener("registration", (token) => {
+        await PushNotifications.addListener("registration", async (token) => {
           console.log("[PushNotifications] Device Token (FCM):", token.value);
-          // Log or save this token in Supabase linked to the user
+          try {
+            const { error } = await (supabase
+              .from("profiles") as any)
+              .update({ fcm_token: token.value })
+              .eq("id", userId);
+            if (error) {
+              console.error("[PushNotifications] Failed to save FCM token to Supabase:", error);
+            } else {
+              console.log("[PushNotifications] FCM token saved successfully to profiles.");
+            }
+          } catch (saveErr) {
+            console.error("[PushNotifications] Error saving FCM token:", saveErr);
+          }
         });
 
         await PushNotifications.addListener("registrationError", (error) => {
