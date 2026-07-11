@@ -144,30 +144,30 @@ function PipelineColumn({ status, clients }: ColumnProps) {
     <div
       ref={setNodeRef}
       className={cn(
-        "rounded-2xl border flex flex-col h-full bg-card/15 backdrop-blur-md transition-colors duration-200 w-[310px] shrink-0 md:w-auto",
+        "rounded-2xl border flex flex-col h-full bg-card/15 backdrop-blur-md transition-colors duration-200 w-[255px] shrink-0 md:w-auto",
         isOver
           ? "border-burgundy/60 bg-burgundy/5"
           : "border-border/60"
       )}
     >
       {/* Column Title Header */}
-      <div className="p-4 border-b border-border/40 flex items-center justify-between bg-muted/10 rounded-t-2xl">
+      <div className="p-3 md:p-4 border-b border-border/40 flex items-center justify-between bg-muted/10 rounded-t-2xl">
         <div className="flex items-center gap-2">
           <div
             className="w-2.5 h-2.5 rounded-full"
             style={{ backgroundColor: status.color }}
           />
-          <h3 className="font-semibold text-sm text-foreground">{status.label}</h3>
+          <h3 className="font-semibold text-xs md:text-sm text-foreground truncate max-w-[130px] md:max-w-none">{status.label}</h3>
         </div>
-        <span className="text-xs bg-muted border border-border px-2 py-0.5 rounded-lg text-muted-foreground font-bold">
+        <span className="text-[10px] md:text-xs bg-muted border border-border px-1.5 py-0.5 rounded-lg text-muted-foreground font-bold">
           {clients.length}
         </span>
       </div>
 
       {/* Cards List container */}
-      <div className="flex-1 overflow-y-auto p-3 space-y-3 max-h-[550px] scrollbar-thin">
+      <div className="flex-1 md:overflow-y-auto overflow-y-visible p-2 md:p-3 space-y-2 md:space-y-3 h-auto md:max-h-[550px] [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         {clients.length === 0 ? (
-          <div className="h-24 border border-dashed border-border/50 rounded-xl flex items-center justify-center text-xs text-muted-foreground/60">
+          <div className="h-20 md:h-24 border border-dashed border-border/50 rounded-xl flex items-center justify-center text-xs text-muted-foreground/60">
             Aday yok
           </div>
         ) : (
@@ -218,7 +218,7 @@ function ClientCard({ client, dragProps, isOverlay }: { client: Client; dragProp
     <div
       {...dragProps}
       className={cn(
-        "rounded-xl bg-card border border-border p-3 space-y-2.5 shadow-sm group hover:border-burgundy/40 transition-colors relative select-none touch-none",
+        "rounded-xl bg-card border border-border p-2.5 md:p-3 space-y-2 md:space-y-2.5 shadow-sm group hover:border-burgundy/40 transition-colors relative select-none touch-none",
         isOverlay ? "border-burgundy ring-2 ring-burgundy/20 shadow-md cursor-grabbing" : "cursor-grab"
       )}
     >
